@@ -101,7 +101,7 @@ P_spin_flip_odd_to_even_prior = P_spin_flip_even_to_odd_prior * ((1 / P_last_mea
 # initialisation informed by our priors.
 
 sequences_in_subset = 100
-number_of_models_to_fit = 100
+number_of_models_to_fit = 30
 
 # an array to inform the fit about the shape of the data, aka how many measurements are in each sequence
 subset_shapes = np.full(shape=sequences_in_subset, fill_value=measurements)
