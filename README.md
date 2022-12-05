@@ -1,4 +1,31 @@
-https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
+# Diraq-Ares: Predicting Error Causation
+
+Main script: https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
+
+
+## Installation
+
+1. Clone the repo 
+
+2. In your terminal or anaconda prompt, create an environment and activate it, for example using anaconda
+
+```bash
+conda create --name error-causation
+
+conda activate error-causation
+```
+
+3. `cd` into the cloned repo `diraq-ares-predicting-error-causation`
+
+4. Install the required packages using pip
+
+```bash
+conda install pip
+
+pip install -r requirements.txt
+```
+
+## `main.py` Walkthrough
 
 - Creating the generative model
 
