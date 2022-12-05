@@ -2,8 +2,9 @@
 
 Main script: https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
 
+## Quick start
 
-## Installation
+### Installation
 
 1. Clone the repo 
 
@@ -15,7 +16,7 @@ conda create --name error-causation
 conda activate error-causation
 ```
 
-3. `cd` into the cloned repo `diraq-ares-predicting-error-causation`
+3. `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/`
 
 4. Install the required packages using pip
 
@@ -24,6 +25,16 @@ conda install pip
 
 pip install -r requirements.txt
 ```
+
+### Run
+
+To run the script run and test the model on simulated data `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run:
+
+```python
+python main.py
+```
+
+In your terminal or ipython prompt/interactive development environment of choice. There will plots generated. 
 
 ## `main.py` Walkthrough
 
