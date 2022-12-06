@@ -1,6 +1,7 @@
 # Diraq-Ares: Predicting Error Causation
 
 Main script: https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
+## Summary
 
 ## Quick start
 
@@ -34,7 +35,40 @@ To run the script run and test the model on simulated data `cd` into the cloned 
 python main.py
 ```
 
-In your terminal or ipython prompt/interactive development environment of choice. There will plots generated. 
+In your terminal or ipython prompt/interactive development environment of choice. There will plots generated. A walk through of what the script is doing can be found in the [source code](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py), or simplified version in the README.md [here](#mainpy-walkthrough)
+
+## Mission Statement
+
+### Problem
+
+![image](images/readoout%20mock%20up%20example.png)
+
+- Repeated PSB non-demolition readout (Two states: Even/Odd == (up, up; down, down)/(up, down; down, up)
+- We try to initialise into the even state
+- In Experiment Number 1  we measured: even, even, even, odd, odd
+
+Questions to answer:
+
+- What caused the change from even to odd in Experiment Number 1 for example?
+- Was there a spin flip caused by the non-demolition measurement (back action)?
+- Was there a readout error at iterations 4 and 5, i.e. the state was even, be we mistakenly read it as odd twice?
+- Could the state have been initialised as odd instead of even, and we read it out incorrectly for the first 3 iterations as even?
+
+### Objectives
+
+- Given a sequence of readout data, predict the probability (with uncertainty) of:
+    - A readout error
+    - spin flip
+    - Initialisation error
+- Therefore tell me what happened in this measurement based on these probabilities
+- Infer the initialisation state (with uncertainty) based on readout data
+- Predict the next state to be read out (with uncertainty) based on previous states
+
+### Solution
+
+- Treat the readout sequences as Markovian
+- Use a Hidden Markov Model to extract the system probabilities
+- Demonstrate success of Hidden Markov Model on simulated data 
 
 ## `main.py` Walkthrough
 
