@@ -47,7 +47,7 @@ In your terminal or ipython prompt/interactive development environment of choice
 - We try to initialise into the even state
 - In Experiment Number 1  we measured: even, even, even, odd, odd
 
-Questions to answer:
+#### Questions to answer:
 
 - What caused the change from even to odd in Experiment Number 1 for example?
 - Was there a spin flip caused by the non-demolition measurement (back action)?
