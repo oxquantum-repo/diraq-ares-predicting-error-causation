@@ -70,7 +70,19 @@ In your terminal or ipython prompt/interactive development environment of choice
 - Use a Hidden Markov Model to extract the system probabilities
 - Demonstrate success of Hidden Markov Model on simulated data 
 
+## Outcome
+
+### Simulated Data
+
+![simulated data figure](images/simulated_data.png)
+
+### Model Performance
+
+![model performance figure](images/model_performance.png)
+
 ## `main.py` Walkthrough
+
+hmmlearn.hmm import CategoricalHMM source code: https://github.com/hmmlearn/hmmlearn/blob/38e34ca7739a1691c6bdd3f4db40cf437b353baf/lib/hmmlearn/hmm.py#L524
 
 - Creating the generative model
 
