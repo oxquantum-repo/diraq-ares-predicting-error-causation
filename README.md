@@ -29,13 +29,21 @@ pip install -r requirements.txt
 
 ### Run
 
-To run the script run and test the model on simulated data `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run:
+To run the script run and test the model on simulated data, `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
 
-```python
+```bash
 python main.py
 ```
 
-In your terminal or ipython prompt/interactive development environment of choice. There will plots generated. A walk through of what the script is doing can be found in the [source code](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py), or simplified version in the README.md [here](#mainpy-walkthrough)
+...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. A walk through of what the script is doing can be found in the [source code](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py), or simplified version in the README.md [here](#mainpy-walkthrough)
+
+To see how the model performance on real data,  `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
+
+```bash
+python data_handler.py
+```
+
+...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. The source code of the `data_handler.py` script can be found [here](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/data_handler.py).
 
 ## Mission Statement
 
