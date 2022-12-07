@@ -27,7 +27,7 @@ plt.imshow(measured_states.T.squeeze(),
 		   )
 plt.xlabel('# repeat')
 plt.ylabel('# measurement')
-plt.show()
+plt.draw()
 
 # %%  coming up with heuristic priors for the parameters
 
@@ -132,27 +132,30 @@ P_readout_inferred = (best_model.emissionprob_[0, 0] + best_model.emissionprob_[
 
 # actually plotting
 ax[0, 0].hist(P_init_even_estimates, bins=20, color='b')
-ax[0, 0].axvline(P_init_even_prior, c='k', linestyle=':')
-ax[0, 0].axvline(P_init_even_inferred, c='k', linestyle='-.')
+ax[0, 0].axvline(P_init_even_prior, c='k', linestyle=':', label='prior')
+ax[0, 0].axvline(P_init_even_inferred, c='k', linestyle='-.', label='inferred')
 ax[0, 0].set_xlabel("P(init_even) \n estimate")
+ax[0, 0].legend(loc=0)
 ax[0, 0].set_ylabel('Counts')
 
 ax[0, 1].hist(P_spin_flip_even_to_odd_estimates, bins=20, color='g')
-ax[0, 1].axvline(P_spin_flip_even_to_odd_prior, c='k', linestyle=':')
-ax[0, 1].axvline(P_spin_flip_even_to_odd_inferred, c='k', linestyle='-.')
+ax[0, 1].axvline(P_spin_flip_even_to_odd_prior, c='k', linestyle=':', label='prior')
+ax[0, 1].axvline(P_spin_flip_even_to_odd_inferred, c='k', linestyle='-.', label='inferred')
 ax[0, 1].set_xlabel("P(spin_flip \n even_to_odd) \n estimates")
+ax[0, 1].legend(loc=0)
 ax[0, 1].set_ylabel('Counts')
 
 ax[1, 0].hist(P_spin_flip_odd_to_even_estimates, bins=20, color='r')
-ax[1, 0].axvline(P_spin_flip_odd_to_even_prior, c='k', linestyle=':')
-ax[1, 0].axvline(P_spin_flip_odd_to_even_inferred, c='k', linestyle='-.')
+ax[1, 0].axvline(P_spin_flip_odd_to_even_prior, c='k', linestyle=':', label='prior')
+ax[1, 0].axvline(P_spin_flip_even_to_odd_inferred, c='k', linestyle='-.', label='inferred')
 ax[1, 0].set_xlabel("P(spin_flip \n odd_to_even) \n estimates")
+ax[1, 0].legend(loc=0)
 ax[1, 0].set_ylabel('Counts')
 
 ax[1, 1].hist(P_readout_estimate, bins=50, color='g')
 ax[1, 1].axvline(P_readout_pior, c='k', linestyle=':', label='prior')
 ax[1, 1].axvline(P_readout_inferred,
-    c='k', linestyle='-.', label='inferred')
+	c='k', linestyle='-.', label='inferred')
 ax[1, 1].set_xlabel("P(readout correct) \n estimates")
 ax[1, 1].legend(loc=0)
 ax[1, 1].set_ylabel('Counts')
