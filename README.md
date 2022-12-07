@@ -97,7 +97,7 @@ P_readout: 0.935
 
 ## Discussion
 
-In the ideal case we can do many measurements such that we can gain enough statistics in a given sequence to accurately extract the probability of a spin flip (odd --> even). However, if the T1 time is short we are unable to obtain enough information to reliably predict the spin flip probability.
+In the ideal case we can do many measurements such that we can gain enough statistics in a given sequence to accurately extract the probability of a spin flip (odd --> even). However, if the T1 time is short we are unable to obtain enough information to reliably predict the spin flip probability as these events appear to be rare.
 
 
 ## `main.py` Walkthrough
@@ -113,7 +113,7 @@ The flow of the `main.py` script can be outlined in the following steps:
 
 ### Generating simulated data
 
-First we generate some simulated data using the CategoricalHMM model class. This includes defining the starting probabilities (initialisation), the transition matrix (spin-flip probabilities) and the emission matrix (readout probabilities). This simulated data is plotted [here](#results)
+First we generate some simulated data using the CategoricalHMM model class. This includes defining the starting probabilities (initialisation), the transition matrix (spin-flip probabilities) and the emission matrix (readout probabilities). This simulated data is plotted [here](#simulated-data)
 
 ```python
 P_init_even = 0.99  # the probability of initialising in the even state
@@ -157,7 +157,6 @@ for i in range(repeats):
 ```
 
 ### Create heuristic priors for the parameters
-- %%  coming up with heuristic priors for the parameters
 
 The probability the first measurement is even is:
 
