@@ -76,10 +76,24 @@ In your terminal or ipython prompt/interactive development environment of choice
 
 ![simulated data figure](images/simulated_data.png)
 
-### Model Performance
+#### Model Performance
 
 ![model performance figure](images/model_performance.png)
 
+### Real Data
+
+![real data figure](images/real_data.png)
+
+#### Model Performance
+
+![model performance on real data figure](images/model_performance_on_real_data.png)
+
+```bash
+P_init: 0.990
+P_spin_flip_even_to_odd: 0.016
+P_spin_flip_odd_to_even: 0.048
+P_readout: 0.935
+```
 
 ## `main.py` Walkthrough
 
