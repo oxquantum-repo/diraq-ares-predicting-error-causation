@@ -205,6 +205,13 @@ P(no transitions) = P(init even) * (1 - P(even to odd))^N
 P(even to odd) = 1 - (P(no transitions) / P(init even)) ^ (1 / N)
 ```
 
+In the code:
+
+```python
+P_no_transitions = np.all(measured_states == 0, axis=1).mean()
+P_spin_flip_even_to_odd_prior = 1 - (P_no_transitions / P_init_even_prior) ** (1 / measurements)
+```
+
 If one considers a transition matrix of the form
 ```
 [[1 - P_eo, P_eo],
@@ -219,6 +226,12 @@ P_oe = (1 / P_odd_ss - 1) * P_eo
 ```
 
 **We assume that the statistics of the last measurement of each sequence is in the stead state**
+
+
+```python
+P_last_measurement_odd = measured_states[:, -1].mean()
+P_spin_flip_odd_to_even_prior = P_spin_flip_even_to_odd_prior * ((1 / P_last_measurement_odd) - 1)
+```
 
 
 ### Fit hidden markov models to the data
