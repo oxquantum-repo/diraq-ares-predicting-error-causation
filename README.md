@@ -172,7 +172,7 @@ The probability the first measurement is even is:
 P(first measurement even) = P(init even) P(measure even | even) + P(init odd) P(measure even | odd)
 ```
 
-And if the initialisation and readout fidelities are any good then:
+And if the initialisation and readout fidelities are good then:
 
 ```
 P(init even) P(measure even | even) >> P(init odd) P(measure even | odd)
@@ -189,6 +189,13 @@ and therefore:
 
 ```
 P(first measurement even) = P(init even)^2 = P(measure even | even)^2
+```
+In the code:
+
+```python
+P_first_measurement_even = 1 - measured_states[:, 0].mean()
+P_init_even_prior = np.sqrt(P_first_measurement_even)
+P_readout_pior = np.sqrt(P_first_measurement_even)
 ```
 
 The probability of measuring even consecutively for N measurements from initialisation is approximately (neglecting readout errors):
