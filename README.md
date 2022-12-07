@@ -95,6 +95,11 @@ P_spin_flip_odd_to_even: 0.048
 P_readout: 0.935
 ```
 
+## Discussion
+
+In the ideal case we can do many measurements such that we can gain enough statistics in a given sequence to accurately extract the probability of a spin flip (odd --> even). However, if the T1 time is short we are unable to obtain enough information to reliably predict the spin flip probability.
+
+
 ## `main.py` Walkthrough
 
 hmmlearn.hmm import CategoricalHMM source code: https://github.com/hmmlearn/hmmlearn/blob/38e34ca7739a1691c6bdd3f4db40cf437b353baf/lib/hmmlearn/hmm.py#L524
