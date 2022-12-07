@@ -41,7 +41,7 @@ In your terminal or ipython prompt/interactive development environment of choice
 
 ### Problem
 
-![image](images/readoout%20mock%20up%20example.png)
+![image](images/readout%20mock%20up%20example.png)
 
 - Repeated PSB non-demolition readout (Two states: Even/Odd == (up, up; down, down)/(up, down; down, up)
 - We try to initialise into the even state
