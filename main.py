@@ -58,7 +58,7 @@ plt.imshow(measured_states.T.squeeze(),
 		   )
 plt.xlabel('# repeat')
 plt.ylabel('# measurement')
-plt.show()
+plt.draw()
 
 # %%  coming up with heuristic priors for the parameters
 
