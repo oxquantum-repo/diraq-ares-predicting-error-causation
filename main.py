@@ -72,7 +72,7 @@ plt.draw()
 
 P_first_measurement_even = 1 - measured_states[:, 0].mean()
 P_init_even_prior = np.sqrt(P_first_measurement_even)
-P_readout_pior = np.sqrt(P_first_measurement_even)
+P_readout_prior = np.sqrt(P_first_measurement_even)
 
 # the probability of measuring even consecutively for N measurements from initialisation is approximately
 # (neglecting readout errors):
@@ -119,8 +119,8 @@ for _ in tqdm(range(number_of_models_to_fit)):
 								np.random.dirichlet(
 									[P_spin_flip_odd_to_even_prior, 1 - P_spin_flip_odd_to_even_prior])])
 	
-	model.emissionprob_ = np.array([np.random.dirichlet([P_readout_pior, 1 - P_readout_pior]),
-									np.random.dirichlet([1 - P_readout_pior, P_readout_pior])])
+	model.emissionprob_ = np.array([np.random.dirichlet([P_readout_prior, 1 - P_readout_prior]),
+									np.random.dirichlet([1 - P_readout_prior, P_readout_prior])])
 	
 	# creating the random subset of the data
 	random_subset_indices = np.random.choice(repeats, sequences_in_subset)
@@ -183,7 +183,7 @@ ax[1, 0].set_ylabel('Counts')
 
 ax[1, 1].hist(P_readout_estimate, bins=50, color='g')
 ax[1, 1].axvline(P_readout, c='k', linestyle='-', label='true')
-ax[1, 1].axvline(P_readout_pior, c='k', linestyle=':', label='prior')
+ax[1, 1].axvline(P_readout_prior, c='k', linestyle=':', label='prior')
 ax[1, 1].axvline(
 	(best_model.emissionprob_[0, 0] + best_model.emissionprob_[1, 1]) / 2,
 	c='k', linestyle='-.', label='inferred')

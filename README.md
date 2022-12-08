@@ -195,7 +195,7 @@ In the code:
 ```python
 P_first_measurement_even = 1 - measured_states[:, 0].mean()
 P_init_even_prior = np.sqrt(P_first_measurement_even)
-P_readout_pior = np.sqrt(P_first_measurement_even)
+P_readout_prior = np.sqrt(P_first_measurement_even)
 ```
 
 The probability of measuring even consecutively for N measurements from initialisation is approximately (neglecting readout errors):
@@ -259,8 +259,8 @@ for _ in tqdm(range(number_of_models_to_fit)):
 								np.random.dirichlet(
 									[P_spin_flip_odd_to_even_prior, 1 - P_spin_flip_odd_to_even_prior])])
 	
-	model.emissionprob_ = np.array([np.random.dirichlet([P_readout_pior, 1 - P_readout_pior]),
-									np.random.dirichlet([1 - P_readout_pior, P_readout_pior])])
+	model.emissionprob_ = np.array([np.random.dirichlet([P_readout_prior, 1 - P_readout_prior]),
+									np.random.dirichlet([1 - P_readout_prior, P_readout_prior])])
 	
 	# creating the random subset of the data
 	random_subset_indices = np.random.choice(repeats, sequences_in_subset)
