@@ -6,7 +6,7 @@ from pathlib import Path
 from hmmlearn import hmm
 from tqdm import tqdm
 
-np.random.seed(111)
+np.random.seed(116)
 
 file = Path("./data/1000_measurements_20_repeats_run_18433.mat")
 data = loadmat(file)
@@ -21,7 +21,7 @@ repeats = measured_states.shape[0]
 
 # %%
 # plotting the generated data
-plt.imshow(measured_states.T.squeeze(),
+plt.imshow(measured_states.T,
 		   cmap='Greys', aspect='auto',
 		   origin='lower', interpolation='none'
 		   )
