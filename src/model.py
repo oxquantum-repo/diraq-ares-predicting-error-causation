@@ -5,62 +5,70 @@ import matplotlib.pyplot as plt
 from .helper_functions import *
 
 
-
 class Model(hmm.CategoricalHMM):
 	
 	def __init__(self):
 		super(Model, self).__init__(n_components=2, init_params='')
 	
 	def __repr__(self):
-		P_init_even, P_spin_flip_even_to_odd, P_spin_flip_odd_to_even, P_readout = self.get_probabilities()
-		return f"P_init_even: {P_init_even :.3f}\n" \
-			   f"P_spin_flip_even_to_odd: {P_spin_flip_even_to_odd :.3f}\n" \
-			   f"P_spin_flip_odd_to_even: {P_spin_flip_odd_to_even :.3f}\n" \
-			   f"P_readout: {P_readout :.3f}"
-		
-	def set_probabilities(self, P_init_even: float, P_spin_flip_even_to_odd: float,
-						  P_spin_flip_odd_to_even, P_readout: float, tol = 1e-3):
-		
-		P_init_even = np.clip(P_init_even, tol, 1 - tol)
-		P_spin_flip_even_to_odd = np.clip(P_spin_flip_even_to_odd, tol, 1 - tol)
-		P_spin_flip_odd_to_even = np.clip(P_spin_flip_odd_to_even, tol, 1 - tol)
-		P_readout = np.clip(P_readout, tol, 1 - tol)
+		p_init_even, p_spin_flip_even_to_odd, p_spin_flip_odd_to_even, p_readout = self.get_probabilities()
+		return f"p_init_even: {p_init_even :.3f}\n" \
+			   f"p_spin_flip_even_to_odd: {p_spin_flip_even_to_odd :.3f}\n" \
+			   f"p_spin_flip_odd_to_even: {p_spin_flip_odd_to_even :.3f}\n" \
+			   f"p_readout: {p_readout :.3f}"
+	
+	def set_probabilities(self, p_init_even: float, p_spin_flip_even_to_odd: float,
+						  p_spin_flip_odd_to_even, p_readout: float):
 		
 		# the probability of initialising in the two states [even, odd]
-		self.startprob_ = np.array([P_init_even, 1 - P_init_even])
+		self.startprob_ = np.array([p_init_even, 1 - p_init_even])
 		
 		# the transition matrix [[even-even, even-odd], [odd-even, odd-odd]]
 		self.transmat_ = np.array([
-			[1 - P_spin_flip_even_to_odd, P_spin_flip_even_to_odd],
-			[P_spin_flip_odd_to_even, 1 - P_spin_flip_odd_to_even]
+			[1 - p_spin_flip_even_to_odd, p_spin_flip_even_to_odd],
+			[p_spin_flip_odd_to_even, 1 - p_spin_flip_odd_to_even]
 		])
 		
 		# the emission matrix encoding the readout fidelity
 		# [[readout even when even, readout even when odd],
 		# [readout odd when even, readout odd when odd]]
 		self.emissionprob_ = np.array([
-			[P_readout, 1 - P_readout],
-			[1 - P_readout, P_readout]
+			[p_readout, 1 - p_readout],
+			[1 - p_readout, p_readout]
 		])
 		return self
 	
 	def get_probabilities(self):
 		# taking the parameters out of matrix form
-		P_init_even = self.startprob_[0]
-		P_spin_flip_even_to_odd = self.transmat_[0, 1]
-		P_spin_flip_odd_to_even = self.transmat_[1, 0]
-		P_readout = (self.emissionprob_[0, 0] + self.emissionprob_[1, 1]) / 2
-		return P_init_even, P_spin_flip_even_to_odd, P_spin_flip_odd_to_even, P_readout
+		p_init_even = self.startprob_[0]
+		p_spin_flip_even_to_odd = self.transmat_[0, 1]
+		p_spin_flip_odd_to_even = self.transmat_[1, 0]
+		p_readout = (self.emissionprob_[0, 0] + self.emissionprob_[1, 1]) / 2
+		return p_init_even, p_spin_flip_even_to_odd, p_spin_flip_odd_to_even, p_readout
 	
-	def randomly_set_probabilities(self, P_init_even_prior: float, P_spin_flip_even_to_odd_prior: float,
-								   P_spin_flip_odd_to_even_prior,
-								   P_readout_prior: float, std=0.01):
+	def randomly_set_probabilities(
+			self,
+			p_init_even_prior: float, p_spin_flip_even_to_odd_prior: float,
+			p_spin_flip_odd_to_even_prior, p_readout_prior: float,
+			p_init_even_prior_std=0.01, p_spin_flip_even_to_odd_prior_std=0.01,
+			p_spin_flip_odd_to_even_prior_std=0.01, p_readout_prior_std=0.01,
+			tol=1e-3
+	):
 		
-		P_init_even = beta_distribution_from_mean_and_std(P_init_even_prior, std)
-		P_spin_flip_even_to_odd = beta_distribution_from_mean_and_std(P_spin_flip_even_to_odd_prior, std)
-		P_spin_flip_odd_to_even = beta_distribution_from_mean_and_std(P_spin_flip_odd_to_even_prior, std)
-		P_readout = beta_distribution_from_mean_and_std(P_readout_prior, std)
-		return self.set_probabilities(P_init_even, P_spin_flip_even_to_odd, P_spin_flip_odd_to_even, P_readout)
+		p_init_even = beta_dist(p_init_even_prior, p_init_even_prior_std)
+		p_spin_flip_even_to_odd = beta_dist(p_spin_flip_even_to_odd_prior,
+											p_spin_flip_even_to_odd_prior_std)
+		p_spin_flip_odd_to_even = beta_dist(p_spin_flip_odd_to_even_prior,
+											p_spin_flip_odd_to_even_prior_std)
+		p_readout = beta_dist(p_readout_prior, p_readout_prior_std)
+		
+		# clipping the probabilities so that they are not too close to zero or one. As this hurts convergence
+		p_init_even = np.clip(p_init_even, tol, 1 - tol)
+		p_spin_flip_even_to_odd = np.clip(p_spin_flip_even_to_odd, tol, 1 - tol)
+		p_spin_flip_odd_to_even = np.clip(p_spin_flip_odd_to_even, tol, 1 - tol)
+		p_readout = np.clip(p_readout, tol, 1 - tol)
+		
+		return self.set_probabilities(p_init_even, p_spin_flip_even_to_odd, p_spin_flip_odd_to_even, p_readout)
 	
 	def fit(self, X):
 		lengths = np.full(X.shape[0], fill_value=X.shape[1])
