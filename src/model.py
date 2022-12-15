@@ -74,6 +74,11 @@ class Model(hmm.CategoricalHMM):
 		lengths = np.full(X.shape[0], fill_value=X.shape[1])
 		return super().fit(X.reshape(-1, 1), lengths)
 	
+	def predict(self, X):
+		shape = X.shape
+		lengths = np.full(shape[0], fill_value=shape[1])
+		return super().predict(X.reshape(-1, 1), lengths).reshape(*shape)
+	
 	def score(self, X, lengths=None):
 		lengths = np.full(X.shape[0], fill_value=X.shape[1])
 		return super().score(X.reshape(-1, 1), lengths)
@@ -92,7 +97,7 @@ class Model(hmm.CategoricalHMM):
 		true_states = np.array(true_states).squeeze()
 		
 		if plot:
-			fig, ax = plt.subplots(nrows=1, ncols=3, sharey=True)
+			fig, ax = plt.subplots(nrows=1, ncols=3, sharey=True, constrained_layout=True)
 			
 			# plotting the generated data
 			ax[0].imshow(true_states.T,
