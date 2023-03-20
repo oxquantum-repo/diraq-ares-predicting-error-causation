@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
 true_model = Model()
-true_model.set_probabilities(0.90, 0.02, 0.01, 0.98)
-measured_states, true_states = true_model.simulate_data(20, 1000, plot=False)
+true_model.set_probabilities(0.95, 0.02, 0.01, 0.98)
+measured_states, true_states = true_model.simulate_data(20, 100, plot=False)
 
 priors = calculate_priors(measured_states)
 priors_std = [0.05, 0.05, 0.05, 0.05]
 
-best_models_parameters, errors = fit_models(measured_states, priors, priors_std, number_of_models_to_fit = 10)
+best_models_parameters, errors = fit_models(measured_states, priors, priors_std, number_of_models_to_fit = 400, plot=True)
 best_fitting_model = Model().set_probabilities(*best_models_parameters)
 
 true_parameters = np.array(true_model.get_probabilities())
@@ -26,7 +26,7 @@ print(f"True value within 2 std             :{np.abs(true_parameters - best_mode
 
 predicted_true_states = best_fitting_model.predict(measured_states)
 
-plot_prediction = True
+plot_prediction = False
 if plot_prediction:
 	fig, ax = plt.subplots(nrows=2, ncols=2, sharey=True, sharex=True, constrained_layout=True)
 	fig.suptitle('Model Predictions', fontsize=16)
