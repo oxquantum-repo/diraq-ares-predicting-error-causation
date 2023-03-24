@@ -96,4 +96,4 @@ def calculate_priors(measured_states):
 	p_init_even_prior = _calculate_init_even_prior(measured_states, p_readout_prior)
 	p_spin_flip_even_to_odd_prior = _calculate_spin_flip_even_to_odd_prior(measured_states, p_init_even_prior)
 	p_spin_flip_odd_to_even_prior = _calculate_spin_flip_odd_to_even_prior(measured_states, p_spin_flip_even_to_odd_prior)
-	return p_readout_prior, p_spin_flip_even_to_odd_prior, p_spin_flip_odd_to_even_prior, p_readout_prior
+	return p_readout_prior, p_spin_flip_even_to_odd_prior, p_spin_flip_odd_to_even_prior, p_readout_prior, p_readout_prior
