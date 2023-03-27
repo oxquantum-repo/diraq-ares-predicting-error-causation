@@ -11,13 +11,12 @@ priors = [0.05, 0.02, 0.02, 0.99, 0.90]
 priors_std = [0.01, 0.01, 0.01, 0.01, 0.01]
 
 data_name = 'superposition'
-
+data_folder = Path("./data/")
 
 data_files = {
-    'even': './data/Repeated_readout_1000_measurements_20_repeats_run_even_init_18433.mat',
-    'odd': './data/Repeated_readout_1000_measurements_20_repeats_run_odd_init_18463.mat',
-    'superposition': './data/Repeated_readout_1000_measurements_20_repeats_run_superposition_init_18450.mat',
-    'repeats': './data/Repeated_readout_10000_measurements_20_repeats_run_19071.mat'
+    'even': data_folder / 'Repeated_readout_1000_measurements_20_repeats_run_even_init_18433.mat',
+    'odd': data_folder / 'Repeated_readout_1000_measurements_20_repeats_run_odd_init_18463.mat',
+    'superposition': data_folder / 'Repeated_readout_1000_measurements_20_repeats_run_superposition_init_18450.mat',
 }
 
 file = Path(data_files.get(data_name))
@@ -25,7 +24,7 @@ file = Path(data_files.get(data_name))
 data = loadmat(file)
 repeat = data['repeats'].squeeze()
 measurement = data['measurements'].squeeze()
-measured_states = 1 - data['measured_states'].squeeze()[:, 0:5]
+measured_states = 1 - data['measured_states'].squeeze()
 
 
 best_models_parameters, errors, model = fit_models(measured_states, priors, priors_std, number_of_models_to_fit=1, plot=False)
