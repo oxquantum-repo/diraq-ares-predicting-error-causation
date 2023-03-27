@@ -58,10 +58,3 @@ if plot_data:
     ax[1].set_title('Predicted true states')
     ax[2].set_title('Difference between \n measured and predicted states')
     plt.show()
-
-    print('\n')
-    print(f"Number of even readout errors: {np.sum(diff == 1)}")
-    print(f"Number of odd readout errors: {np.sum(diff == -1)}")
-
-    print(f"fraction of even readout errors: {1 - np.sum(diff == 1) / np.sum(predicted_true_states ==0) :.4f}")
-    print(f"fraction of odd readout errors: {1 - np.sum(diff == -1) / np.sum(predicted_true_states == 1) :.4f}")
