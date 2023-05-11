@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from src import Model, calculate_uncertainty
+from src import CatagoricalModel, calculate_uncertainty
 from tqdm import tqdm
 
 import numpy as np
@@ -8,7 +8,7 @@ import numpy as np
 
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
-model = Model()
+model = CatagoricalModel()
 probabilities = np.array([0.99, 0.01, 0.01, 0.99])
 model.set_probabilities(*probabilities)
 

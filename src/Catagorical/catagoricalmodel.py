@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from .helper_functions import *
 
 
-class Model(hmm.CategoricalHMM):
+class CatagoricalModel(hmm.CategoricalHMM):
 
     def __init__(self, **kwargs):
-        super(Model, self).__init__(n_components=2, init_params='', **kwargs)
+        super(CatagoricalModel, self).__init__(n_components=2, init_params='', **kwargs)
 
     def __repr__(self):
         p_init_even, p_spin_flip_even_to_odd, p_spin_flip_odd_to_even, p_readout = self.get_probabilities()

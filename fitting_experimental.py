@@ -1,4 +1,4 @@
-from src import Model, calculate_priors, fit_models
+from src import CatagoricalModel, fit_models
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
@@ -28,7 +28,7 @@ measured_states = 1 - data['measured_states'].squeeze()
 
 
 best_models_parameters, errors, model = fit_models(measured_states, priors, priors_std, number_of_models_to_fit=1, plot=False)
-best_fitting_model = Model().set_probabilities(*best_models_parameters)
+best_fitting_model = CatagoricalModel().set_probabilities(*best_models_parameters)
 
 predicted_true_states = best_fitting_model.predict(measured_states)
 np.savez(f'./{data_name}.npz', measured_states=measured_states, predicted_true_states=predicted_true_states)

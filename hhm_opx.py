@@ -2,14 +2,14 @@ import matplotlib.pyplot as plt
 
 from opx import *
 from qm.qua import *
-from qualang_tools.loops import from_array, qua_arange
+from qualang_tools.loops import qua_arange
 from qm.QuantumMachinesManager import QuantumMachinesManager
 from opx.configuration import config, host
 from time import sleep
 
-from src import Model
+from src import CatagoricalModel
 
-model = Model()
+model = CatagoricalModel()
 probabilities = np.array([0.5, 0.002, 0.002, 0.9, 0.9])
 model.set_probabilities(*probabilities)
 
@@ -28,7 +28,7 @@ def ravel_index(n, m, shape_m):
     return n * shape_m + m
 
 
-with program() as hmm_program:
+with program() as forward:
     N_ = len(O_)
     M_ = 2
 
@@ -73,7 +73,7 @@ with program() as hmm_program:
 qmm = QuantumMachinesManager(host=host)
 qm = qmm.open_qm(config=config)
 
-job = qm.execute(hmm_program)
+job = qm.execute(forward)
 
 while job.result_handles.is_processing():
     sleep(0.01)

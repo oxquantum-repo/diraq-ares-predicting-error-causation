@@ -1,3 +1,2 @@
-from .model import *
-from .priors import *
-from .model_fitting import *
+from .Catagorical import *
+from .Gaussian import *

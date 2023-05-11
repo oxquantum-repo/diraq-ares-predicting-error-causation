@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from src import Model, calculate_priors, fit_models
+from src import CatagoricalModel, calculate_priors
 from tqdm import tqdm
 
 import numpy as np
@@ -12,13 +12,13 @@ plotting_parameter_window = 0.2
 
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
-true_model = Model()
+true_model = CatagoricalModel()
 true_probabilities = np.array([0.95, 0.02, 0.02, 0.98])
 true_model.set_probabilities(*true_probabilities)
 priors_std = [0.05, 0.05, 0.05, 0.05]
 
 
-models_to_fit = [Model(tol = 0.001, n_iter = 1000) for _ in range(number_of_models_to_fit)]
+models_to_fit = [CatagoricalModel(tol = 0.001, n_iter = 1000) for _ in range(number_of_models_to_fit)]
 
 for model in tqdm(models_to_fit):
     measured_states, true_states = true_model.simulate_data(20, 100, plot=False)
@@ -31,7 +31,7 @@ for model in tqdm(models_to_fit):
 def f(x):
     assert not np.any(x < 0), f"trying to set probability less than zero {x}"
     assert not np.any(x > 1), f"trying to set probability greater than one {x}"
-    return Model().set_probabilities(*x).score(measured_states)
+    return CatagoricalModel().set_probabilities(*x).score(measured_states)
 
 I = - Hessian(f, step=hessian_step, method='backward').__call__(true_probabilities)
 I_inv = np.linalg.pinv(I)

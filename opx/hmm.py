@@ -33,9 +33,7 @@ def forward(O, S, Pi, Tm, Em):
         Em: emission matrix
         """
     O = O.astype(int)
-
-    N = len(O)
-    M = len(S)
+    N, M = len(O), len(S)
     F = np.zeros((N, M))
     F[0, :] = Pi * Em[:, O[0]]
     for n in range(1, N):

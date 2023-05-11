@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 
 from opx import *
-from src import Model
 
 # model = Model()
 # probabilities = np.array([0.95, 0.02, 0.02, 0.99, 0.99])
