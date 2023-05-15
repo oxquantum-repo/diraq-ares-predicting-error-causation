@@ -7,9 +7,9 @@ from qm.QuantumMachinesManager import QuantumMachinesManager
 from opx.configuration import config, host
 from time import sleep
 
-from src import CatagoricalModel
+from src import CategoricalModel
 
-model = CatagoricalModel()
+model = CategoricalModel()
 probabilities = np.array([0.5, 0.002, 0.002, 0.9, 0.9])
 model.set_probabilities(*probabilities)
 

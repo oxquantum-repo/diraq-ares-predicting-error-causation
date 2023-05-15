@@ -1,10 +1,10 @@
-from src import CatagoricalModel, fit_models
+from src import CategoricalModel, fit_models
 import numpy as np
 import matplotlib.pyplot as plt
 
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
-true_model = CatagoricalModel()
+true_model = CategoricalModel()
 true_probabilities = [0.0574, 0.0373, 0.0091, 0.99, 0.90]
 
 true_model.set_probabilities(*true_probabilities)
@@ -14,7 +14,7 @@ priors = [0.05, 0.01, 0.01, 0.9, 0.9]
 priors_std = [0.01, 0.01, 0.01, 0.01, 0.01]
 
 best_models_parameters, errors, best_model = fit_models(measured_states, priors, priors_std, number_of_models_to_fit = 10, plot=True, plotting_parameter_window =0.5)
-best_fitting_model = CatagoricalModel().set_probabilities(*best_models_parameters)
+best_fitting_model = CategoricalModel().set_probabilities(*best_models_parameters)
 
 true_parameters = np.array(true_model.get_probabilities())
 
