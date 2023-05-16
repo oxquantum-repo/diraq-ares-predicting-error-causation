@@ -47,6 +47,10 @@ class CategoricalModel(hmm.CategoricalHMM):
         assert np.isclose(np.sum(self.startprob_), 1.), "The initialisation probabilities do not sum to 1"
         return self.startprob_[0]
 
+    def get_start_error(self):
+        assert self._errors is not None, "The errors have not been calculated yet"
+        return self._errors[0]
+
     def get_start_prob_and_error(self):
         assert self._errors is not None, "The errors have not been calculated yet"
         return self.startprob_[0], self._errors[0]
@@ -66,6 +70,10 @@ class CategoricalModel(hmm.CategoricalHMM):
         assert self._errors is not None, "The errors have not been calculated yet"
         return self.transmat_[0, 1], self.transmat_[1, 0], self._errors[1], self._errors[2]
 
+    def get_transition_error(self):
+        assert self._errors is not None, "The errors have not been calculated yet"
+        return self._errors[1], self._errors[2]
+
     def set_emission_prob(self, p_readout_even: float, p_readout_odd: float):
         self.emissionprob_ = np.array([
             [p_readout_even, 1 - p_readout_even],
@@ -80,6 +88,10 @@ class CategoricalModel(hmm.CategoricalHMM):
     def get_emission_prob_and_error(self):
         assert self._errors is not None, "The errors have not been calculated yet"
         return self.emissionprob_[0, 0], self.emissionprob_[1, 1], self._errors[3], self._errors[4]
+
+    def get_emission_error(self):
+        assert self._errors is not None, "The errors have not been calculated yet"
+        return self._errors[3], self._errors[4]
 
     def set_probs(self, p_init_even: float, p_spin_flip_even_to_odd: float,
                   p_spin_flip_odd_to_even, p_readout_even: float, p_readout_odd: float):
@@ -123,7 +135,7 @@ class CategoricalModel(hmm.CategoricalHMM):
         lengths = np.full(shape[0], fill_value=shape[1])
         return super().predict_proba(measured_states.reshape(-1, 1), lengths).reshape(*shape, self.n_components).squeeze()
 
-    def predict(self, measured_states, plot =False):
+    def predict(self, measured_states, plot=False, **kwargs):
         shape = measured_states.shape
         lengths = np.full(shape[0], fill_value=shape[1])
 
@@ -156,12 +168,15 @@ class CategoricalModel(hmm.CategoricalHMM):
             ax[2].legend(
                 handles=[mpatches.Patch(color='red', label='-1'), mpatches.Patch(color='green', label='+1')]),
 
+            plt.tight_layout()
             if 'save_fig' in kwargs:
                 if kwargs['save_fig']:
                     save_folder = kwargs['save_folder'] if 'save_folder' in kwargs else './'
                     figure_name = kwargs['figure_name'] if 'figure_name' in kwargs else 'simulated.pdf'
-                    plt.savefig(f'{save_folder}/{figure_name}.pdf', dpi=300, bbox_inches='tight')
-            plt.tight_layout()
+
+                    print(f'Saving figure to {save_folder}/{figure_name}.pdf')
+                    plt.savefig(f'{save_folder}/{figure_name}.pdf', bbox_inches='tight')
+
 
         return predicted_states
 
