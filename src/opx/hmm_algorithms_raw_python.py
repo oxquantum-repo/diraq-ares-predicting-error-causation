@@ -24,7 +24,7 @@ def viterbi(O, S, Pi, Tm, Em):
 
 
 
-def forward(O, S, Pi, Tm, Em):
+def forward(observations, startprob, transmat, emmisonprob):
     """Forward algorithm for HMMs.
         O: observation sequence
         S: set of states
@@ -32,14 +32,18 @@ def forward(O, S, Pi, Tm, Em):
         Tm: transition matrix
         Em: emission matrix
         """
-    O = O.astype(int)
-    N, M = len(O), len(S)
+    observations = observations.astype(int).squeeze()
+    startprob = startprob.squeeze()
+    transmat = transmat.squeeze()
+    emmisonprob = emmisonprob.squeeze()
+
+    N, M = len(observations), 2
     F = np.zeros((N, M))
-    F[0, :] = Pi * Em[:, O[0]]
+    F[0, :] = startprob * emmisonprob[:, observations[0]]
     for n in range(1, N):
         for m in range(M):
-            F[n, m] = np.sum(F[n-1, :] * Tm[:, m]) * Em[m, O[n]]
-    return F
+            F[n, m] = np.sum(F[n-1, :] * transmat[:, m]) * emmisonprob[m, observations[n]]
+    return F / np.sum(F, axis=1).reshape(-1, 1)
 
 def backward(O, S, Pi, Tm, Em):
     """Backward algorithm for HMMs.

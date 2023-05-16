@@ -118,6 +118,11 @@ class CategoricalModel(hmm.CategoricalHMM):
             self._errors = np.sqrt(diag)
         return self
 
+    def predict_proba(self, measured_states):
+        shape = measured_states.shape
+        lengths = np.full(shape[0], fill_value=shape[1])
+        return super().predict_proba(measured_states.reshape(-1, 1), lengths).reshape(*shape, self.n_components).squeeze()
+
     def predict(self, measured_states, plot =False):
         shape = measured_states.shape
         lengths = np.full(shape[0], fill_value=shape[1])
@@ -163,10 +168,6 @@ class CategoricalModel(hmm.CategoricalHMM):
     def score(self, X):
         lengths = np.full(X.shape[0], fill_value=X.shape[1])
         return super().score(X.reshape(-1, 1), lengths)
-
-    def score_samples(self, X):
-        lengths = np.full(X.shape[0], fill_value=X.shape[1])
-        return super().score_samples(X.reshape(-1, 1), lengths)
 
     def simulate_data(self, measurements, repeats, plot=False, **kwargs):
         measured_states = []  # array to hold the measured states (even or odd), this data is available
@@ -215,4 +216,4 @@ class CategoricalModel(hmm.CategoricalHMM):
                     plt.savefig(f'{save_folder}/{figure_name}.pdf', dpi=300, bbox_inches='tight')
             plt.tight_layout()
 
-        return measured_states, true_states
+        return measured_states.reshape(repeats, measurements), true_states.reshape(repeats, measurements)
