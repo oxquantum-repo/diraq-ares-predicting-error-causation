@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 
-from src import CategoricalModel, calculate_uncertainty
-from src import fit_models
+from src import CategoricalModel
 from tqdm import tqdm
 
 import numpy as np

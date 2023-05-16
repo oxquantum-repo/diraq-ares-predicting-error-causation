@@ -27,7 +27,7 @@ class CategoricalModel(hmm.CategoricalHMM):
             p_even_odd_error, p_odd_even_error = self._errors[1:3]
             p_readout_even_error, p_readout_odd_error = self._errors[3:5]
             return f"p_init_even: {p_init :.3f} ± {p_init_error :.3f}\n" \
-                   f"p_even_odd, p_odd_even: {p_even_odd :.3f} ± {p_even_odd_error :.3f}, {p_odd_even: 3f} ± {p_odd_even_error :.3f}\n" \
+                   f"p_even_odd, p_odd_even: {p_even_odd :.3f} ± {p_even_odd_error :.3f}, {p_odd_even: .3f} ± {p_odd_even_error :.3f}\n" \
                    f"p_readout_even, p_readout_odd: {p_readout_even :.3f} ± {p_readout_even_error :.3f}, {p_readout_odd :.3f} ± {p_readout_odd_error :.3f}"
         else:
             return f"p_init_even: {p_init :.3f}\n" \
@@ -95,11 +95,11 @@ class CategoricalModel(hmm.CategoricalHMM):
     def get_probs_and_errors(self):
         return self.get_probs(), tuple(self._errors)
 
-    def fit(self, X, compute_uncertainty=True):
-        lengths = np.full(X.shape[0], fill_value=X.shape[1])
-        super().fit(X.reshape(-1, 1), lengths)
+    def fit(self, measured_states, compute_uncertainty=True):
+        lengths = np.full(measured_states.shape[0], fill_value=measured_states.shape[1])
+        super().fit(measured_states.reshape(-1, 1), lengths)
         if compute_uncertainty:
-            self.compute_uncertainty(X)
+            self.compute_uncertainty(measured_states)
         return self
 
     def compute_uncertainty(self, X, hessian_step=1e-4):
@@ -118,10 +118,47 @@ class CategoricalModel(hmm.CategoricalHMM):
             self._errors = np.sqrt(diag)
         return self
 
-    def predict(self, X):
-        shape = X.shape
+    def predict(self, measured_states, plot =False):
+        shape = measured_states.shape
         lengths = np.full(shape[0], fill_value=shape[1])
-        return super().predict(X.reshape(-1, 1), lengths).reshape(*shape)
+
+        predicted_states = super().predict(measured_states.reshape(-1, 1), lengths).reshape(*shape)
+        if plot:
+            shape = np.array(measured_states.shape) + 1
+            fig, ax = plt.subplots(nrows=1, ncols=3, sharey=True)
+            fig.set_size_inches(5, 2.5)
+
+            kwargs = {
+                'aspect': 'auto',
+                'origin': 'lower',
+                'interpolation': 'antialiased',
+                'extent': [1, shape[1], 1, shape[0]]
+            }
+
+            diff = (measured_states - predicted_states)
+            ax[0].imshow(measured_states, cmap=ListedColormap(['white', 'black']), **kwargs)
+            ax[1].imshow(predicted_states, cmap=ListedColormap(['white', 'black']), **kwargs)
+            ax[2].imshow(diff, cmap=ListedColormap(['red', 'white', 'green']), **kwargs)
+            ax[0].set_ylabel('Repeat')
+            ax[0].set_xlabel('Measurement\nnumber')
+            ax[1].set_xlabel('Measurement\nnumber')
+            ax[2].set_xlabel('Measurement\nnumber')
+
+            ax[0].set_title('Measured')
+            ax[1].set_title('Predicted True')
+            ax[2].set_title('Measured - Predicted True')
+
+            ax[2].legend(
+                handles=[mpatches.Patch(color='red', label='-1'), mpatches.Patch(color='green', label='+1')]),
+
+            if 'save_fig' in kwargs:
+                if kwargs['save_fig']:
+                    save_folder = kwargs['save_folder'] if 'save_folder' in kwargs else './'
+                    figure_name = kwargs['figure_name'] if 'figure_name' in kwargs else 'simulated.pdf'
+                    plt.savefig(f'{save_folder}/{figure_name}.pdf', dpi=300, bbox_inches='tight')
+            plt.tight_layout()
+
+        return predicted_states
 
     def score(self, X):
         lengths = np.full(X.shape[0], fill_value=X.shape[1])

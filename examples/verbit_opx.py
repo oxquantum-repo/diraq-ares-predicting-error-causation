@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 
-from opx import *
+from src.opx import *
 from qm.qua import *
 from qualang_tools.loops import qua_arange
 from qm.QuantumMachinesManager import QuantumMachinesManager
-from opx.configuration import config, host
+from src.opx import config, host
 from time import sleep
 
 from src import CategoricalModel
