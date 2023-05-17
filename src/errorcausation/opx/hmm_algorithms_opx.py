@@ -1,7 +1,7 @@
 from qm.qua import *
 from qualang_tools.loops import qua_arange
 
-from .helper_functions import ravel_index
+from errorcausation.helperfunctions.arraymanipulations import ravel_index
 
 
 def create_forward_program(observations: np.array, startprob: np.array, transmat: np.array, emissionprob: np.array):

@@ -2,7 +2,7 @@ from hmmlearn import hmm
 import numpy as np
 import matplotlib.pyplot as plt
 
-from .helper_functions import *
+from errorcausation.helperfunctions.arraymanipulations import beta_dist
 from numdifftools import Hessian
 from matplotlib.colors import ListedColormap
 import matplotlib.patches as mpatches

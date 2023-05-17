@@ -2,9 +2,7 @@ from hmmlearn import hmm
 import numpy as np
 import matplotlib.pyplot as plt
 
-def full_covariance_matrix_to_spherical(cov):
-    return np.array([cov[0, 0], cov[1, 1]])
-
+from errorcausation.helperfunctions.arraymanipulations import full_covariance_matrix_to_spherical
 
 class GaussianModel(hmm.GaussianHMM):
 

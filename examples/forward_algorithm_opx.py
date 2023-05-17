@@ -1,12 +1,12 @@
+from time import sleep
 import matplotlib.pyplot as plt
+import numpy as np
 
 from qm import QuantumMachinesManager
 
-from src.opx import *
-from time import sleep
-
-from src import CategoricalModel
-
+from errorcausation.opx.hmm_algorithms_opx import create_forward_program
+from errorcausation.opx.hmm_algorithms_raw_python import forward
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 # creating the model to simulate the data
 model = CategoricalModel()
 model.set_start_prob(0.5)
