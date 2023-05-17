@@ -4,10 +4,6 @@ from qm.qua import Math
 
 from errorcausation.helperfunctions.arraymanipulations import ravel_index
 
-def normalize(x):
-    assign(x[0], x[0] / (x[0] + x[1]))
-    assign(x[1], x[1] / (x[0] + x[1]))
-
 def create_forward_program(observations: np.array, startprob: np.array, transmat: np.array, emissionprob: np.array):
     # enforcing the types of the inputs
     observations = observations.astype(int).squeeze().tolist()
@@ -36,6 +32,11 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
         sum = declare(fixed, value=0.)
         temp = declare(fixed, value=[0., 0.])
 
+        def normalize(x):
+            assign(sum, x[0] + x[1])
+            assign(x[0], x[0] / sum)
+            assign(x[1], x[1] / sum)
+
         # saving the parameters of the hhm as qua arrays
         observations = declare(int, value=observations)
         transmat = declare(fixed, value=transmat)
@@ -61,7 +62,6 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
                 assign(temp[m], sum * emmissionprob[index_emmissionprob(m, observations[n])])
 
             normalize(temp)
-
             # rescaling alpha_0 and alpha_1 such that they sum to one and saving them to the alpha array
             assign(alpha[index_alpha(n, 0)], temp[0])
             assign(alpha[index_alpha(n, 1)], temp[1])

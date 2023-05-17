@@ -11,9 +11,9 @@ from errorcausation.opx.hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 # creating the model to simulate the data
 model = CategoricalModel()
-model.set_start_prob(0.5)
+model.set_start_prob(1.)
 model.set_transition_prob(0.02, 0.02)
-model.set_emission_prob(0.99, 0.99)
+model.set_emission_prob(0.9, 0.9)
 
 # simulating the data
 measured_states, true_states = model.simulate_data(measurements=200, repeats=1)
