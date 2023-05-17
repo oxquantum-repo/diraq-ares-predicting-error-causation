@@ -38,12 +38,14 @@ def forward(observations, startprob, transmat, emmisonprob):
     emmisonprob = emmisonprob.squeeze()
 
     N, M = len(observations), 2
-    F = np.zeros((N, M))
-    F[0, :] = startprob * emmisonprob[:, observations[0]]
+    alpha = np.zeros((N, M))
+    alpha[0, :] = startprob * emmisonprob[:, observations[0]]
+    alpha[0, :] /= np.sum(alpha[0, :])
     for n in range(1, N):
         for m in range(M):
-            F[n, m] = np.sum(F[n-1, :] * transmat[:, m]) * emmisonprob[m, observations[n]]
-    return F / np.sum(F, axis=1).reshape(-1, 1)
+            alpha[n, m] = np.sum(alpha[n-1, :] * transmat[:, m]) * emmisonprob[m, observations[n]]
+        alpha[n, :] /= np.sum(alpha[n, :])
+    return alpha
 
 def backward(O, S, Pi, Tm, Em):
     """Backward algorithm for HMMs.

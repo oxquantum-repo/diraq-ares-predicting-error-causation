@@ -9,6 +9,7 @@ np.random.seed(0)
 from errorcausation.opx.hmm_algorithms_opx import create_forward_program
 from errorcausation.opx.hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
+from time import perf_counter_ns
 # creating the model to simulate the data
 model = CategoricalModel()
 model.set_start_prob(1.)
@@ -18,8 +19,10 @@ model.set_emission_prob(0.9, 0.9)
 # simulating the data
 measured_states, true_states = model.simulate_data(measurements=200, repeats=1)
 
+t0 = perf_counter_ns()
 # using the forward algorithm to compute the probability of the measured states given the data
 p_calculated_on_computer = forward(measured_states, model.startprob_, model.transmat_, model.emissionprob_)
+t1 = perf_counter_ns()
 
 # creating the program to run on the OPX
 forward_program = create_forward_program(measured_states, model.startprob_, model.transmat_, model.emissionprob_)
@@ -56,11 +59,18 @@ p0 = job.result_handles.get("p0").fetch_all()
 p1 = job.result_handles.get("p1").fetch_all()
 p_calculated_on_opx = np.stack([p0, p1], axis=1)
 
+p0_timestamps = job.result_handles.get("p0_timestamps").fetch_all()
+p1_timestamps = job.result_handles.get("p1_timestamps").fetch_all()
+
+p0_compute_latency = np.diff(p0_timestamps).max()
+p1_compute_latency = np.diff(p1_timestamps).max()
+print(f'Total PC compute time: {(t1 - t0) / 1000} us')
+print(f'Total OPX compute time: {max(p0_timestamps.max(), p1_timestamps.max()) / 1000} us')
+print(f'p0, p1 compute latency: {p0_compute_latency, p1_compute_latency} ns')
 
 # comparing the results for the two methods
 max_diff = np.abs(p_calculated_on_opx - p_calculated_on_computer).max()
-print(f'Max difference between p_calculated_on_opx and p_calculated_on_computer is: {max_diff}')
-
+print(f'Max difference between p_calculated_on_opx and p_calculated_on_computer is: {max_diff :.5E}')
 
 # plotting the results
 fig, ax = plt.subplots(3, 1, sharex=True)

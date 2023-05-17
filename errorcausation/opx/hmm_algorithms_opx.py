@@ -73,8 +73,7 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
         with stream_processing():
             alpha_0_stream.buffer(number_of_observations).save("p0")
             alpha_1_stream.buffer(number_of_observations).save("p1")
-
-
-
+            alpha_0_stream.timestamps().buffer(number_of_observations).save("p0_timestamps")
+            alpha_1_stream.timestamps().buffer(number_of_observations).save("p1_timestamps")
 
     return forward
