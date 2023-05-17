@@ -4,13 +4,15 @@ import numpy as np
 
 from qm import QuantumMachinesManager
 
+np.random.seed(0)
+
 from errorcausation.opx.hmm_algorithms_opx import create_forward_program
 from errorcausation.opx.hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 # creating the model to simulate the data
 model = CategoricalModel()
 model.set_start_prob(0.5)
-model.set_transition_prob(0.05, 0.02)
+model.set_transition_prob(0.02, 0.02)
 model.set_emission_prob(0.99, 0.99)
 
 # simulating the data
@@ -53,6 +55,7 @@ while job.result_handles.is_processing():
 p0 = job.result_handles.get("p0").fetch_all()
 p1 = job.result_handles.get("p1").fetch_all()
 p_calculated_on_opx = np.stack([p0, p1], axis=1)
+
 
 # comparing the results for the two methods
 max_diff = np.abs(p_calculated_on_opx - p_calculated_on_computer).max()

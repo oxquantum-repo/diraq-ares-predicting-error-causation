@@ -71,13 +71,9 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
             save(temp[1], alpha_1_stream)
 
         with stream_processing():
+            alpha_0_stream.buffer(number_of_observations).save("p0")
+            alpha_1_stream.buffer(number_of_observations).save("p1")
 
-            # alpha_0_stream.buffer(number_of_observations).save("p0")
-            # alpha_1_stream.buffer(number_of_observations).save("p1")
-
-            # # as when it is done on the FPGA there is the possibility of fixed point errors
-            (alpha_0_stream / (alpha_0_stream + alpha_1_stream)).buffer(number_of_observations).save("p0")
-            (alpha_1_stream / (alpha_0_stream + alpha_1_stream)).buffer(number_of_observations).save("p1")
 
 
 
