@@ -1,8 +1,12 @@
 from qm.qua import *
 from qualang_tools.loops import qua_arange
+from qm.qua import Math
 
 from .helper_functions import ravel_index
 
+def normalize(x):
+    assign(x[0], x[0] / (x[0] + x[1]))
+    assign(x[1], x[1] / (x[0] + x[1]))
 
 def create_forward_program(observations: np.array, startprob: np.array, transmat: np.array, emissionprob: np.array):
     # enforcing the types of the inputs
@@ -31,7 +35,6 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
         # temporary variables
         sum = declare(fixed, value=0.)
         temp = declare(fixed, value=[0., 0.])
-        recip = declare(fixed, value=0.)
 
         # saving the parameters of the hhm as qua arrays
         observations = declare(int, value=observations)
@@ -40,12 +43,15 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
 
         # the alpha array to store the forward probabilities
         alpha = declare(fixed, size=number_of_hidden_states * number_of_observations)
-        assign(alpha[index_alpha(0, 0)], startprob[0] * emmissionprob[index_emmissionprob(0, observations[0])])
-        assign(alpha[index_alpha(0, 1)], startprob[1] * emmissionprob[index_emmissionprob(1, observations[0])])
+        assign(temp[0], startprob[0] * emmissionprob[index_emmissionprob(0, observations[0])])
+        assign(temp[1], startprob[1] * emmissionprob[index_emmissionprob(1, observations[0])])
 
+        normalize(temp)
+        assign(alpha[index_alpha(0, 0)], temp[0])
+        assign(alpha[index_alpha(0, 1)], temp[1])
         # saving the first alpha values to the streams
-        save(alpha[index_alpha(n, 0)], alpha_0_stream)
-        save(alpha[index_alpha(n, 1)], alpha_1_stream)
+        save(temp[0], alpha_0_stream)
+        save(temp[1], alpha_1_stream)
 
         with for_(*qua_arange(n, 1, number_of_observations, 1)):
             with for_(*qua_arange(m, 0, number_of_hidden_states, 1)):
@@ -54,17 +60,21 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
                     assign(sum, sum + alpha[index_alpha(n - 1, k)] * transmat[index_transmat(k, m)])
                 assign(temp[m], sum * emmissionprob[index_emmissionprob(m, observations[n])])
 
-            # saving the reciprocal of the sum of the two alpha values, as it is used twice and division is expensive
-            assign(recip, 1. / (temp[0] + temp[1]))
+            normalize(temp)
+
             # rescaling alpha_0 and alpha_1 such that they sum to one and saving them to the alpha array
-            assign(alpha[index_alpha(n, 0)], temp[0] * recip)
-            assign(alpha[index_alpha(n, 1)], temp[1] * recip)
+            assign(alpha[index_alpha(n, 0)], temp[0])
+            assign(alpha[index_alpha(n, 1)], temp[1])
 
             # saving the alpha values to the streams
-            save(alpha[index_alpha(n, 0)], alpha_0_stream)
-            save(alpha[index_alpha(n, 1)], alpha_1_stream)
+            save(temp[0], alpha_0_stream)
+            save(temp[1], alpha_1_stream)
 
         with stream_processing():
+
+            # alpha_0_stream.buffer(number_of_observations).save("p0")
+            # alpha_1_stream.buffer(number_of_observations).save("p1")
+
             # # as when it is done on the FPGA there is the possibility of fixed point errors
             (alpha_0_stream / (alpha_0_stream + alpha_1_stream)).buffer(number_of_observations).save("p0")
             (alpha_1_stream / (alpha_0_stream + alpha_1_stream)).buffer(number_of_observations).save("p1")
