@@ -1,5 +1,5 @@
-from src import CategoricalModel
 import numpy as np
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
 np.random.seed(0)
 

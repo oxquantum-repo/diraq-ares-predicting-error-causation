@@ -1,7 +1,7 @@
-from src import CategoricalModel
 import numpy as np
 from pathlib import Path
 from scipy.io import loadmat
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
 np.random.seed(0)
 

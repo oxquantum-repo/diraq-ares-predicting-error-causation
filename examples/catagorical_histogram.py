@@ -1,13 +1,11 @@
-import matplotlib.pyplot as plt
-
-from src import CategoricalModel
-import numpy as np
-from tqdm import tqdm
-
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
+
+from tqdm import tqdm
 import scienceplots
+
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
 plt.style.use(['science', 'no-latex', 'grid', 'ieee', 'std-colors'])
 plt.rcParams.update({'font.size': 10})
