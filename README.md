@@ -1,49 +1,43 @@
-# Diraq-Ares: Predicting Error Causation
+# `errorcausation` - Diraq-Ares: Predicting Error Causation
 
-Main script: https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
+A package for analysing and quantifying the SPAM + state flip errors in a quantum computer
+
 ## Summary
 
 ## Quick start
 
 ### Installation
 
-1. Clone the repo 
+1. Clone the repo
+
+```bash
+git clone  https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/
+```
 
 2. In your terminal or anaconda prompt, create an environment and activate it, for example using anaconda
 
 ```bash
-conda create --name error-causation
+conda create --name errorcausation
 
-conda activate error-causation
+conda activate errorcausation
 ```
 
 3. `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/`
 
-4. Install the required packages using pip
+4. Install the required packages using pip and the `errorcausation` pacakage
 
 ```bash
 conda install pip
-
-pip install -r requirements.txt
+python3 -m pip install --upgrade build
+python3 -m build
+pip install -e .
 ```
 
-### Run
+The `-e` flags means that the package is in "developer/editable" mode, i.e. the changes that you make in the package will be reflected in your working environment
 
-To run the script run and test the model on simulated data, `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
+### Run Instructions
 
-```bash
-python simulated_error_bars.py
-```
 
-...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. A walk through of what the script is doing can be found in the [source code](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py), or simplified version in the README.md [here](#mainpy-walkthrough)
-
-To see how the model performance on real data,  `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
-
-```bash
-python data_handler.py
-```
-
-...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. The source code of the `data_handler.py` script can be found [here](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/data_handler.py).
 
 ## Mission Statement
 
