@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from src import CategoricalModel
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 from tqdm import tqdm
 
 import numpy as np

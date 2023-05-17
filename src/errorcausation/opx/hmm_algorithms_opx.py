@@ -2,7 +2,7 @@ from qm.qua import *
 from qualang_tools.loops import qua_arange
 from qm.qua import Math
 
-from .helper_functions import ravel_index
+from errorcausation.helperfunctions.arraymanipulations import ravel_index
 
 def normalize(x):
     assign(x[0], x[0] / (x[0] + x[1]))

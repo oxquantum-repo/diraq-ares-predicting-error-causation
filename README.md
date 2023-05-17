@@ -1,49 +1,76 @@
-# Diraq-Ares: Predicting Error Causation
+# `errorcausation` - Diraq-Ares: Predicting Error Causation
 
-Main script: https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py
+A package for analysing and quantifying the SPAM + state flip errors in a quantum computer
+
 ## Summary
 
 ## Quick start
 
 ### Installation
 
-1. Clone the repo 
+1. Clone the repo
+
+```bash
+git clone  https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/
+```
 
 2. In your terminal or anaconda prompt, create an environment and activate it, for example using anaconda
 
 ```bash
-conda create --name error-causation
+conda create --name errorcausation
 
-conda activate error-causation
+conda activate errorcausation
 ```
 
 3. `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/`
 
-4. Install the required packages using pip
+4. Install the required packages using pip and the `errorcausation` pacakage
 
 ```bash
 conda install pip
-
-pip install -r requirements.txt
+python3 -m pip install --upgrade build
+python3 -m build
+pip install -e .
 ```
 
-### Run
+The `-e` flags means that the package is in "developer/editable" mode, i.e. the changes that you make in the package will be reflected in your working environment
 
-To run the script run and test the model on simulated data, `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
+### Run Instructions
 
-```bash
-python simulated_error_bars.py
+Below is an example of how one would run the `errorcausation` package:
+
+```python
+import numpy as np
+from pathlib import Path
+from scipy.io import loadmat
+from errorcausation.Catagorical.categoricalmodel import CategoricalModel
+
+np.random.seed(0)
+
+file = Path('./data/Repeated_readout_1000_measurements_20_repeats_run_even_init_18433.mat')
+data = loadmat(file.resolve())
+measured_states = 1 - data['measured_states'].squeeze()
+
+# initialising a model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
+# to optimise
+model_to_fit = CategoricalModel()
+model_to_fit.set_start_prob(0.95)
+model_to_fit.set_transition_prob(0.05, 0.05)
+model_to_fit.set_emission_prob(0.95, 0.95)
+
+# fitting the model to the data, using the Baum-Welch algorithm. The uncertainty in the parameters is also computed
+# using the Cramer-Rao lower bound.
+model_to_fit.fit(measured_states, compute_uncertainty=True)
+
+# printing the fitted model, which should be close to the model used to simulate the data
+print(model_to_fit)
+
+# using the fitted model to predict the true qubit state from the measured state and plotting the results
+predicted_states = model_to_fit.predict(measured_states, plot=True)
+
 ```
 
-...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. A walk through of what the script is doing can be found in the [source code](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/main.py), or simplified version in the README.md [here](#mainpy-walkthrough)
-
-To see how the model performance on real data,  `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/` and run...
-
-```bash
-python data_handler.py
-```
-
-...in your terminal or ipython prompt/interactive development environment of choice. There will plots generated. The source code of the `data_handler.py` script can be found [here](https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/blob/main/data_handler.py).
+This was taken from [catagorical_example_experimental.py](examples/catagorical_example_experimental.py). More examples can be found in the [examples folder](examples/).
 
 ## Mission Statement
 

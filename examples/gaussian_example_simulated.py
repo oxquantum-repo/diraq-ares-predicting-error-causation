@@ -8,7 +8,7 @@ import scienceplots
 # plt.style.use(['science', 'no-latex', 'grid', 'ieee', 'std-colors'])
 # plt.rcParams.update({'font.size': 10})
 
-from src import GaussianModel
+from errorcausation.Gaussian.GaussianModel import GaussianModel 
 
 np.random.seed(42)
 
