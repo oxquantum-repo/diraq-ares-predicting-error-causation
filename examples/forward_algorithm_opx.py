@@ -12,7 +12,7 @@ from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 from time import perf_counter_ns
 # creating the model to simulate the data
 model = CategoricalModel()
-model.set_start_prob(1.)
+model.set_start_prob(0.5)
 model.set_transition_prob(0.02, 0.02)
 model.set_emission_prob(0.9, 0.9)
 
