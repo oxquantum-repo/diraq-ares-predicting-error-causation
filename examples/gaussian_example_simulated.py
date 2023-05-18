@@ -18,7 +18,7 @@ model.covars_ = np.array([0.5, 0.5]) ** 2
 
 t0 = time()
 N = 10
-X, Z = model.simulate_data(N, repeats = 10000)
+X, Z = model.simulate_data(N, repeats = 1000)
 t1 = time()
 print(f"Time to simulate data: {t1 - t0:.3f}s")
 
