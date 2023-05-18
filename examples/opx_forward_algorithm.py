@@ -14,10 +14,10 @@ from time import perf_counter_ns
 model = CategoricalModel()
 model.set_start_prob(0.5)
 model.set_transition_prob(0.02, 0.02)
-model.set_emission_prob(0.9, 0.9)
+model.set_emission_prob(0.99, 0.99)
 
 # simulating the data
-measured_states, true_states = model.simulate_data(measurements=200, repeats=1)
+measured_states, true_states = model.simulate_data(measurements=20, repeats=1)
 
 t0 = perf_counter_ns()
 # using the forward algorithm to compute the probability of the measured states given the data
@@ -84,7 +84,7 @@ ax[1].plot(p_calculated_on_computer[:, 0], label='Calculated on Lab PC', c = 'r'
 ax[1].plot(p_calculated_on_opx[:, 0], label='Calculated OPX', c = 'k', alpha = 0.5)
 
 ax[1].set_xlabel('Measurement number')
-ax[1].set_ylabel('$p(even | measured spin states)$')
+ax[1].set_ylabel('$p(even | $measured spin states$)$')
 ax[1].legend()
 
 diff = p_calculated_on_opx[:, 0] - p_calculated_on_computer[:, 0]

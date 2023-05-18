@@ -32,15 +32,16 @@ def create_forward_program(observations: np.array, startprob: np.array, transmat
         sum = declare(fixed, value=0.)
         temp = declare(fixed, value=[0., 0.])
 
-        def normalize(x):
-            assign(sum, x[0] + x[1])
-            assign(x[0], x[0] / sum)
-            assign(x[1], x[1] / sum)
-
         # saving the parameters of the hhm as qua arrays
         observations = declare(int, value=observations)
         transmat = declare(fixed, value=transmat)
         emmissionprob = declare(fixed, value=emmissionprob)
+
+        # defining a function to normalize the array
+        def normalize(x):
+            assign(sum, x[0] + x[1])
+            assign(x[0], x[0] / sum)
+            assign(x[1], x[1] / sum)
 
         # the alpha array to store the forward probabilities
         alpha = declare(fixed, size=number_of_hidden_states * number_of_observations)
