@@ -3,16 +3,18 @@ import numpy as np
 from pathlib import Path
 from scipy.io import loadmat
 
-np.random.seed(0)
+# np.random.seed(0)
 
-file = Path('./data/Repeated_readout_1000_measurements_20_repeats_run_even_init_18433.mat')
+file = Path('./data/Repeated_readout_1000_measurements_20_repeats_run_superposition_init_18450.mat')
 data = loadmat(file.resolve())
 measured_states = 1 - data['measured_states'].squeeze()
+
+measured_states = measured_states[0:200, 0:10]
 
 # initialising a model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
 # to optimise
 model_to_fit = CategoricalModel()
-model_to_fit.set_start_prob(0.95)
+model_to_fit.set_start_prob(0.5)
 model_to_fit.set_transition_prob(0.05, 0.05)
 model_to_fit.set_emission_prob(0.95, 0.95)
 

@@ -11,6 +11,7 @@ plt.rcParams.update({'font.size': 10})
 np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
 
+
 class CategoricalModel(hmm.CategoricalHMM):
 
     def __init__(self, **kwargs):
@@ -26,9 +27,9 @@ class CategoricalModel(hmm.CategoricalHMM):
             p_init_error = self._errors[0]
             p_even_odd_error, p_odd_even_error = self._errors[1:3]
             p_readout_even_error, p_readout_odd_error = self._errors[3:5]
-            return f"p_init_even: {p_init :.3f} ± {p_init_error :.3f}\n" \
-                   f"p_even_odd, p_odd_even: {p_even_odd :.3f} ± {p_even_odd_error :.3f}, {p_odd_even: .3f} ± {p_odd_even_error :.3f}\n" \
-                   f"p_readout_even, p_readout_odd: {p_readout_even :.3f} ± {p_readout_even_error :.3f}, {p_readout_odd :.3f} ± {p_readout_odd_error :.3f}"
+            return f"p_init_even: {p_init :.4f} ± {p_init_error :.4f}\n" \
+                   f"p_even_odd, p_odd_even: {p_even_odd :.4f} ± {p_even_odd_error :.4f}, {p_odd_even: .4f} ± {p_odd_even_error :.4f}\n" \
+                   f"p_readout_even, p_readout_odd: {p_readout_even :.4f} ± {p_readout_even_error :.4f}, {p_readout_odd :.4f} ± {p_readout_odd_error :.4f}"
         else:
             return f"p_init_even: {p_init :.3f}\n" \
                    f"p_even_odd, p_odd_even: {p_even_odd :.3f}{p_odd_even: 3f}\n" \

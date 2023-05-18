@@ -6,8 +6,8 @@ np.random.seed(0)
 # initialising a model to simulate data which we will fit another
 model = CategoricalModel()
 model.set_start_prob(0.99)
-model.set_transition_prob(0.02, 0.02)
-model.set_emission_prob(0.99, 0.99)
+model.set_transition_prob(0.01, 0.02)
+model.set_emission_prob(0.995, 0.99)
 
 # using the model to simulate data and plotting it.
 # the number of measurements is the number of measurements to perform before the qubit is reset
