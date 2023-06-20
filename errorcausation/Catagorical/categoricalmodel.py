@@ -154,8 +154,8 @@ class CategoricalModel(hmm.CategoricalHMM):
             }
 
             diff = (measured_states - predicted_states)
-            ax[0].imshow(measured_states, cmap=ListedColormap(['white', 'black']), **kwargs)
-            ax[1].imshow(predicted_states, cmap=ListedColormap(['white', 'black']), **kwargs)
+            ax[0].imshow(measured_states, cmap=ListedColormap(['black', 'white']), **kwargs)
+            ax[1].imshow(predicted_states, cmap=ListedColormap(['black', 'white']), **kwargs)
             ax[2].imshow(diff, cmap=ListedColormap(['red', 'white', 'green']), **kwargs)
             ax[0].set_ylabel('Repeat')
             ax[0].set_xlabel('Measurement\nnumber')
@@ -211,8 +211,8 @@ class CategoricalModel(hmm.CategoricalHMM):
             }
 
             diff = (measured_states - true_states)
-            ax[0].imshow(measured_states, cmap=ListedColormap(['white', 'black']), **kwargs)
-            ax[1].imshow(true_states, cmap=ListedColormap(['white', 'black']), **kwargs)
+            ax[0].imshow(measured_states, cmap=ListedColormap(['black', 'white']), **kwargs)
+            ax[1].imshow(true_states, cmap=ListedColormap(['black', 'white']), **kwargs)
             ax[2].imshow(diff, cmap=ListedColormap(['red', 'white', 'green']), **kwargs)
             ax[0].set_ylabel('Repeat')
             ax[0].set_xlabel('Measurement\nnumber')

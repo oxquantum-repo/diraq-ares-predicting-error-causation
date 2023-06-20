@@ -7,7 +7,7 @@ from qm import QuantumMachinesManager
 np.random.seed(0)
 
 from errorcausation.opx.hmm_algorithms_opx import create_forward_program
-from errorcausation.opx.hmm_algorithms_raw_python import forward
+from errorcausation.opx.categorical_hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 from time import perf_counter_ns
 # creating the model to simulate the data
@@ -17,7 +17,7 @@ model.set_transition_prob(0.02, 0.02)
 model.set_emission_prob(0.99, 0.99)
 
 # simulating the data
-measured_states, true_states = model.simulate_data(measurements=20, repeats=1)
+measured_states, true_states = model.simulate_data(measurements=200, repeats=1)
 
 t0 = perf_counter_ns()
 # using the forward algorithm to compute the probability of the measured states given the data

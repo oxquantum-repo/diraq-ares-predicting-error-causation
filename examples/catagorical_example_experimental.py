@@ -5,11 +5,10 @@ from scipy.io import loadmat
 
 # np.random.seed(0)
 
-file = Path('./data/Repeated_readout_1000_measurements_20_repeats_run_superposition_init_18450.mat')
+file = Path('./data/superposition_init.mat')
 data = loadmat(file.resolve())
 measured_states = 1 - data['measured_states'].squeeze()
 
-measured_states = measured_states[0:200, 0:10]
 
 # initialising a model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
 # to optimise

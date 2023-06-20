@@ -47,7 +47,7 @@ from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
 np.random.seed(0)
 
-file = Path('./data/Repeated_readout_1000_measurements_20_repeats_run_even_init_18433.mat')
+file = Path('data/even_init.mat')
 data = loadmat(file.resolve())
 measured_states = 1 - data['measured_states'].squeeze()
 
