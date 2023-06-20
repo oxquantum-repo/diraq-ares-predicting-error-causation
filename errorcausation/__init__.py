@@ -1,2 +1,2 @@
-from .Catagorical import CategoricalModel
-from .Gaussian import GaussianModel
+from .Catagorical import *
+from .Gaussian import *
