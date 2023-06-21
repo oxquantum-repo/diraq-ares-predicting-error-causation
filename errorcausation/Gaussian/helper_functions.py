@@ -1,4 +1,5 @@
 import dataclasses
+from typing import Optional
 
 import numpy as np
 from scipy.stats import norm
@@ -9,15 +10,32 @@ from dataclasses import dataclass
 def array_to_complex(X):
     return X[..., 0] + 1j * X[..., 1]
 
-
 @dataclasses.dataclass
-class ReadoutCorrections:
+class PartialReadoutResult:
     I_correction: float
     Q_correction: float
     phase_correction: float
     decision_boundary: float
     f_ground: float
     f_excited: float
+    f_init: float
+    f_init_steady_state: float
+
+
+@dataclasses.dataclass
+class ReadoutResult:
+    I_correction: float
+    Q_correction: float
+    phase_correction: float
+    decision_boundary: float
+    f_ground: float
+    f_excited: float
+
+    f_ground_frequentest: float
+    f_excited_frequentest: float
+
+    f_init: float
+    f_init_steady_state: float
 
 
 def apply_correction(I, Q, corrections):
@@ -31,9 +49,11 @@ def readout_corrections(model):
     means = model.means_
     stds = model.covar_to_std()
     startprob = model.startprob_
+    transmat = model.transmat_
 
-    ground_id = np.argmax(startprob)
-    excited_id = np.argmin(startprob)
+    ground_id = int(transmat[0, 1] > transmat[1, 0])
+    excited_id = (ground_id + 1) % 2
+    f_init = startprob[ground_id]
 
     ground_mean = array_to_complex(means[ground_id])
     excited_mean = array_to_complex(means[excited_id])
@@ -54,19 +74,22 @@ def readout_corrections(model):
     assert applicable_roots.__len__() == 1, f"Found {applicable_roots.__len__()} applicable roots: {applicable_roots} there should be exactly one."
     decision_boundary = applicable_roots[0]
 
-
     ground_dist, excited_dist = norm(0, ground_std), norm(fully_corrected_excited_mean.real, excited_std)
 
     f_ground = ground_dist.cdf(decision_boundary)
     f_excited = 1 - excited_dist.cdf(decision_boundary)
 
-    return ReadoutCorrections(
+    stationary_distribution = model.get_stationary_distribution()
+
+    return PartialReadoutResult(
         I_correction=ground_mean.real,
         Q_correction=ground_mean.imag,
         phase_correction=phase_correction,
         decision_boundary=decision_boundary,
         f_ground=f_ground,
-        f_excited=f_excited
+        f_excited=f_excited,
+        f_init=f_init,
+        f_init_steady_state=stationary_distribution[ground_id]
     )
 
 
@@ -95,9 +118,6 @@ def readout_fidelity(model, X, plot=False):
     if f_ground < 0.5 and f_excited < 0.5:
         f_ground = 1 - f_ground
         f_excited = 1 - f_excited
-
-    print(f"Frequentest f_ground, f_excited = {f_excited:.3f}, {f_ground:.3f}")
-    print(f"Bayesian f_ground, f_excited = {corrections.f_ground:.3f}, {corrections.f_excited:.3f}")
 
     if plot:
         IQ_range = max([I.max() - I.min(), Q.max() - Q.min()])
@@ -155,3 +175,9 @@ def readout_fidelity(model, X, plot=False):
         ax[1, 1].axvline(corrections.decision_boundary, color='k', linestyle='--')
 
         fig.tight_layout()
+
+    return ReadoutResult(
+        **corrections.__dict__,
+        f_ground_frequentest=f_ground,
+        f_excited_frequentest=f_excited,
+    )

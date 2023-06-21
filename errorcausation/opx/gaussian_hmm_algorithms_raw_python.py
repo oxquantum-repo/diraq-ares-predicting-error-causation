@@ -23,8 +23,7 @@ def viterbi(O, S, Pi, Tm, Em):
     return q
 
 
-
-def forward(observations, startprob, transmat, emmisonprob):
+def forward(observations, startprob, transmat, means, covs):
     """Forward algorithm for HMMs.
         O: observation sequence
         S: set of states
@@ -32,18 +31,31 @@ def forward(observations, startprob, transmat, emmisonprob):
         Tm: transition matrix
         Em: emission matrix
         """
-    observations = observations.astype(int).squeeze()
+    observations = observations.squeeze()
+
+    I_observations = observations[:, 0]
+    Q_observations = observations[:, 1]
+
     startprob = startprob.squeeze()
     transmat = transmat.squeeze()
-    emmisonprob = emmisonprob.squeeze()
+    means = means.squeeze()
+    covs = covs.squeeze()
+
+    I_means = means[:, 0]
+    Q_means = means[:, 1]
+
+    I_covs = np.diag(covs[0, ...])
+    Q_covs = np.diag(covs[1, ...])
 
     N, M = len(observations), 2
     alpha = np.zeros((N, M))
-    alpha[0, :] = startprob * emmisonprob[:, observations[0]]
+    alpha[0, :] = startprob * np.exp(-0.5 * (I_observations[0] - I_means)**2 / I_covs)
     alpha[0, :] /= np.sum(alpha[0, :])
     for n in range(1, N):
         for m in range(M):
-            alpha[n, m] = np.sum(alpha[n-1, :] * transmat[:, m]) * emmisonprob[m, observations[n]]
+            I_obs = np.exp(-0.5 * (I_observations[n] - I_means[m])**2 / I_covs[m])
+            Q_obs = np.exp(-0.5 * (Q_observations[n] - Q_means[m])**2 / Q_covs[m])
+            alpha[n, m] = np.sum(alpha[n-1, :] * transmat[:, m]) * I_obs * Q_obs
         alpha[n, :] /= np.sum(alpha[n, :])
     return alpha
 

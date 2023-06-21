@@ -5,7 +5,7 @@ from matplotlib import cm
 
 from scipy.interpolate import interp1d
 
-from errorcausation.helperfunctions.arraymanipulations import full_covariance_matrix_to_spherical
+from .helper_functions import readout_fidelity, readout_corrections
 
 class GaussianModel(hmm.GaussianHMM):
 
@@ -84,16 +84,18 @@ class GaussianModel(hmm.GaussianHMM):
                 Q_f = interp1d(t, Q, kind='linear', bounds_error=False, fill_value=(Q[0], Q[-1]))
 
                 t_dense = np.linspace(0, 1, 10 * measurements)
-                ax[2].scatter(I_f(t_dense), Q_f(t_dense), linewidth=1, c = cm.Greys(t_dense), s=0.1)
+                ax[2].plot(I, Q, color='black', linewidth=1)
                 ax[2].set_xlabel('I')
                 ax[2].set_ylabel('Q')
-
-
-
-
-
+                ax[2].set_aspect('equal')
 
             fig.tight_layout()
             plt.show()
 
         return measured_states, true_states
+
+    def readout_corrections(self):
+        return readout_corrections(self)
+
+    def readout_fidelity(self, X, plot = False):
+        return readout_fidelity(self, X, plot)
