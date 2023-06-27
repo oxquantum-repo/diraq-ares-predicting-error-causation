@@ -15,6 +15,10 @@ class GaussianModel(hmm.GaussianHMM):
     def covar_to_std(self):
         return np.sqrt(np.diag(self._covars_))
 
+    def rescale(self, scale_factor):
+        self.means_ = self.means_ * scale_factor
+        self._covars_ = self._covars_ * scale_factor ** 2
+
     def fit(self, X):
         lengths = np.full(X.shape[0], fill_value=X.shape[1])
         reshaped_data = X.reshape(-1, 2)

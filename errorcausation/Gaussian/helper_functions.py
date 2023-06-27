@@ -41,7 +41,7 @@ class ReadoutResult:
 def apply_correction(I, Q, corrections):
     z = I + 1j * Q
     z = z - (corrections.I_correction + 1j * corrections.Q_correction)
-    z = z * np.exp(1j * corrections.phase_correction)
+    z = z * np.exp(-1j * corrections.phase_correction)
     return z.real, z.imag
 
 
@@ -59,9 +59,9 @@ def readout_corrections(model):
     excited_mean = array_to_complex(means[excited_id])
 
     partically_correct_exited_mean = excited_mean - ground_mean
-    phase_correction = -np.angle(partically_correct_exited_mean)
+    phase_correction = np.angle(partically_correct_exited_mean)
 
-    fully_corrected_excited_mean = partically_correct_exited_mean * np.exp(1j * phase_correction)
+    fully_corrected_excited_mean = partically_correct_exited_mean * np.exp(-1j * phase_correction)
 
     ground_std, excited_std = stds[ground_id], stds[excited_id]
     coefficients = np.array([
@@ -149,6 +149,7 @@ def readout_fidelity(model, X, plot=False):
         ax[0, 1].set_ylabel('Q')
         ax[0, 1].set_xlim(I_bins[0], I_bins[-1])
         ax[0, 1].set_ylim(Q_bins[0], Q_bins[-1])
+        ax[0, 1].legend()
         ax[0, 1].set_aspect('equal')
 
         ax[1, 0].hist2d(I_corrected, Q_corrected, cmap='hot', bins=[I_corrected_bins, Q_corrected_bins])
@@ -172,6 +173,7 @@ def readout_fidelity(model, X, plot=False):
         ax[1, 1].set_xlim(I_corrected_bins[0], I_corrected_bins[-1])
         ax[1, 1].set_ylim(Q_corrected_bins[0], Q_corrected_bins[-1])
         ax[1, 1].set_aspect('equal')
+        ax[1, 1].legend(markerscale=10, frameon=False)
         ax[1, 1].axvline(corrections.decision_boundary, color='k', linestyle='--')
 
         fig.tight_layout()

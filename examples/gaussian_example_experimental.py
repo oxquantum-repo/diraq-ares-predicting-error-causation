@@ -93,3 +93,4 @@ print(f'The initialisation fidelity is {100 * model_to_fit.startprob_.max():.1f}
 print(f'The model\'s stead-state indicates a initialisation fidelity of {100 * model_to_fit.get_stationary_distribution().max():.1f}%')
 
 model_to_fit.predict(X)
+model_to_fit.rescale(0)

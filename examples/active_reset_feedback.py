@@ -100,7 +100,7 @@ transmat = np.stack([
     model.transmat_, x_gate
 ], axis=0)
 
-hidden_states, observations, alpha, actions = repeated_calls(model.startprob_, transmat, model.emissionprob_, 50, 1000)
+hidden_states, observations, alpha, actions = repeated_calls(model.startprob_, transmat, model.emissionprob_, 10, 1000)
 
 final_states = last_positive_value(hidden_states)
 init_fidelity = (1 - final_states.mean()) * 100
