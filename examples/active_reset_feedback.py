@@ -6,8 +6,8 @@ from matplotlib.colors import ListedColormap
 
 model = CategoricalModel()
 model.set_start_prob(0.5)
-model.set_transition_prob(0.003, 0.03)
-model.set_emission_prob(0.9, 0.9)
+model.set_transition_prob(0.03, 0.01)
+model.set_emission_prob(0.99, 0.9)
 gate_fidelity = 0.9
 
 def last_positive_index(x):
