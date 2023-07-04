@@ -14,17 +14,17 @@ model.startprob_ = np.array([0.8, 0.2])
 model.transmat_ = np.array([[0.97, 0.03],
                             [0.1, 0.9]])
 
-model.means_ = np.array([[0.0, 0.0], [1, 1]]) / np.sqrt(2)
-model.covars_ = np.array([0.75, 0.75]) ** 2
+model.means_ = np.array([[0.00, 0.0], [0.01, 0.001]])
+model.covars_ = np.array([0.004, 0.004]) ** 2
 
-X, Z = model.simulate_data(200, repeats = 1, plot=False)
+X, Z = model.simulate_data(200, repeats = 1, plot=True)
 
 forward_program = create_forward_program(
     X.squeeze(),
-    np.array([0.5, 0.5]),
-    model.transmat_,
-    model.means_,
-    model.covars_
+    model,
+    normalise = True,
+    overflow_protect = True,
+    if_incorperate_Q = True
 )
 
 t0 = perf_counter_ns()
@@ -71,6 +71,8 @@ p0 = job.result_handles.get("p0").fetch_all()
 p1 = job.result_handles.get("p1").fetch_all()
 alpha_opx = np.stack([p0, p1], axis=1)
 
+alpha_opx = alpha_opx / alpha_opx.sum(axis=1, keepdims=True)
+
 p0_timestamps = job.result_handles.get("p0_timestamps").fetch_all()
 p1_timestamps = job.result_handles.get("p1_timestamps").fetch_all()
 
@@ -88,6 +90,8 @@ ax[1].plot(alpha[:, 1], label = "p(excited)")
 ax[1].plot(alpha_opx[:, 1], label ="p(excited) on OPX")
 ax[1].plot(Z[0, :], label = "true state")
 ax[1].legend()
+
+
 
 ax[2].plot(alpha[:, 1] - alpha_opx[:, 1], label = "difference")
 fig.tight_layout()
