@@ -6,7 +6,7 @@ from qm import QuantumMachinesManager
 
 np.random.seed(0)
 
-from errorcausation.opx.hmm_algorithms_opx import create_forward_program
+from errorcausation.opx.catagorical_hmm_algorithms_opx import create_forward_program
 from errorcausation.opx.categorical_hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 from time import perf_counter_ns

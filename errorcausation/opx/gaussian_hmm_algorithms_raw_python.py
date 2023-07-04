@@ -49,7 +49,7 @@ def forward(observations, startprob, transmat, means, covs):
 
     N, M = len(observations), 2
     alpha = np.zeros((N, M))
-    alpha[0, :] = startprob * np.exp(-0.5 * (I_observations[0] - I_means)**2 / I_covs)
+    alpha[0, :] = startprob * np.exp(-0.5 * (I_observations[0] - I_means)**2 / I_covs) * np.exp(-0.5 * (Q_observations[0] - Q_means)**2 / Q_covs)
     alpha[0, :] /= np.sum(alpha[0, :])
     for n in range(1, N):
         for m in range(M):
