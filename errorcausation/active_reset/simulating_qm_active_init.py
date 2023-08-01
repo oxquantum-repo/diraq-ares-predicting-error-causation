@@ -110,6 +110,9 @@ class QubitInit:
 	def simulate_hhm(self, N_repeat, iteration_max):
 		return repeated_calls_hmm(self, N_repeat, iteration_max)
 
+	def simulate_hhm_gaussian(self, N_repeat, iteration_max):
+		return repeated_calls_hmm_gaussian(self, N_repeat, iteration_max)
+
 def repeated_calls_qm(model, n_repeat, iteration_max):
 	hidden_states = np.zeros((n_repeat, iteration_max), dtype=int)
 	observations = np.zeros((n_repeat, iteration_max), dtype=float)
@@ -137,6 +140,24 @@ def repeated_calls_hmm(model, n_repeat, iteration_max):
 
 	for i in range(n_repeat):
 		observations[i, :], hidden_states[i, :], final_hidden_states[i], final_observations[i] = forward_hhm(model, iteration_max)
+
+	return QubitInitFeedbackResult(
+		model=model,
+		hidden_states=hidden_states,
+		observations=observations,
+		verification_state=final_hidden_states,
+		verification_measurement=final_observations
+	)
+
+def repeated_calls_hmm_gaussian(model, n_repeat, iteration_max):
+	hidden_states = np.zeros((n_repeat, iteration_max), dtype=int)
+	observations = np.zeros((n_repeat, iteration_max), dtype=float)
+
+	final_hidden_states = np.zeros(n_repeat, dtype=int)
+	final_observations = np.zeros(n_repeat, dtype=float)
+
+	for i in range(n_repeat):
+		observations[i, :], hidden_states[i, :], final_hidden_states[i], final_observations[i] = forward_hhm_gaussian(model, iteration_max)
 
 	return QubitInitFeedbackResult(
 		model=model,
@@ -229,6 +250,54 @@ def forward_hhm(model: QubitInit, N):
 
 	return observations, hidden_states, final_state, final_observation
 
+def forward_hhm_gaussian(model: QubitInit, N):
+
+	transmat = model.transmat()
+
+	std = model.std
+
+	# the hidden states are the states of the HMM and are not accessible
+	hidden_states = np.full(N, fill_value=-1, dtype=int)
+	# the observations are the observations of the HMM and are accessible
+	observations = np.full(N, fill_value=np.nan, dtype=float)
+	classifications = np.full(N, fill_value=-1, dtype=int)
+
+	alpha = np.full((N, 2), fill_value=np.nan, dtype=float)
+	actions = np.full(N, fill_value=-1, dtype=int)
+
+	starting_hidden_state = np.random.choice([0, 1], p=model.start_prob())
+
+	actions[0] = 0
+	p_hidden = transmat[actions[0], starting_hidden_state, :]
+
+	hidden_states[0] = np.random.choice([0, 1], p=p_hidden)
+	observations[0] = hidden_states[0] + np.random.randn() * model.std
+	classifications[0] = observations[0] > model.threshold
+
+	# calculating alpha[0, :]
+	alpha[0, :] = model.start_prob() * gaussian(observations[0], np.array([0, 1]), std)
+	alpha[0, :] /= np.sum(alpha[0, :])
+
+	for i in range(1, N):
+		if alpha[i - 1, 0] > 1 - model.p_0_to_1:
+			break
+
+		actions[i] = alpha[i - 1, 0] < 0.5
+
+		p_hidden = transmat[actions[i], hidden_states[i - 1], :]
+		hidden_states[i] = np.random.choice([0, 1], p=p_hidden)
+		observations[i] = hidden_states[i] + np.random.randn() * model.std
+		classifications[i] = observations[i] > model.threshold
+
+		for m in range(2):
+			alpha[i, m] = np.sum(alpha[i - 1, :] * transmat[actions[i], :, m]) * gaussian(observations[i], m, std)
+		alpha[i, :] /= np.sum(alpha[i, :])
+
+	p_hidden = transmat[0, hidden_states[i - 1], :]
+	final_state = np.random.choice([0, 1], p=p_hidden)
+	final_observation = final_state + np.random.randn() * model.std
+
+	return observations, hidden_states, final_state, final_observation
 
 
 @dataclass
