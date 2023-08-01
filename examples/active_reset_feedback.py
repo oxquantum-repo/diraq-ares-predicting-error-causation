@@ -4,10 +4,11 @@ from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
+
 model = CategoricalModel()
 model.set_start_prob(0.5)
-model.set_transition_prob(0.03, 0.01)
-model.set_emission_prob(0.99, 0.9)
+model.set_transition_prob(0.003, 0.001)
+model.set_emission_prob(0.99, 0.90)
 gate_fidelity = 0.9
 
 def last_positive_index(x):
@@ -20,7 +21,7 @@ def decide_action(alpha):
     return alpha[0] < 0.5
 
 def decide_to_terminate(alpha):
-    return alpha[0] > 0.995
+    return alpha[0] > 0.99
 
 def forward(startprob, transmat, emmisonprob, N):
     """Forward algorithm for HMMs.
@@ -40,7 +41,7 @@ def forward(startprob, transmat, emmisonprob, N):
 
     # the actions are the actions of the HMM and are accessible
     actions = np.full(N, fill_value=-1, dtype=int)
-    actions[0] = 0
+    actions[0] = decide_action(startprob)
 
     # computing the first hidden state and first observation
     hidden_states[0] = np.random.choice(2, p=startprob)
@@ -51,25 +52,27 @@ def forward(startprob, transmat, emmisonprob, N):
     alpha[0, :] = startprob * emmisonprob[:, observations[0]]
     alpha[0, :] /= np.sum(alpha[0, :])
 
-    actions[1] = decide_action(alpha[0])
+    terminate = decide_to_terminate(alpha[0])
+    if not terminate:
+        actions[1] = decide_action(alpha[0])
 
-    for n in range(1, N):
-        # computing the new hidden state
-        p_hidden = transmat[actions[n], hidden_states[n - 1], :]
-        hidden_states[n] = np.random.choice([0, 1], p=p_hidden)
+        for n in range(1, N):
+            # computing the new hidden state
+            p_hidden = transmat[actions[n], hidden_states[n - 1], :]
+            hidden_states[n] = np.random.choice([0, 1], p=p_hidden)
 
-        # computing the new observation based on the new hidden state
-        p_observation = emmisonprob[hidden_states[n], :]
-        observations[n] = np.random.choice([0, 1], p=p_observation)
+            # computing the new observation based on the new hidden state
+            p_observation = emmisonprob[hidden_states[n], :]
+            observations[n] = np.random.choice([0, 1], p=p_observation)
 
-        for m in range(M):
-            alpha[n, m] = np.sum(alpha[n-1, :] * transmat[actions[n], :, m]) * emmisonprob[m, observations[n]]
-        alpha[n, :] /= np.sum(alpha[n, :])
+            for m in range(M):
+                alpha[n, m] = np.sum(alpha[n-1, :] * transmat[actions[n], :, m]) * emmisonprob[m, observations[n]]
+            alpha[n, :] /= np.sum(alpha[n, :])
 
-        if decide_to_terminate(alpha[n]):
-            break
-        if n < N - 1:
-            actions[n + 1] = decide_action(alpha[n])
+            if decide_to_terminate(alpha[n]):
+                break
+            if n < N - 1:
+                actions[n + 1] = decide_action(alpha[n])
 
     return hidden_states, observations, alpha, actions
 
@@ -87,7 +90,6 @@ def repeated_calls(startprob, transmat, emmisonprob, N, n_call):
         actions[i, :] = action
 
     a[np.isnan(a)] = -1
-
     return h, o, a, actions
 
 
@@ -110,8 +112,12 @@ final_alpha = last_positive_value(alpha[..., 0])
 alpha_confidence_fidelity = (final_alpha).mean() * 100
 alpha_confidence_fidelity_error = (final_alpha).std() * 100 / np.sqrt(len(final_alpha))
 
+number_of_iterations = last_positive_index(alpha[..., 0]).mean() + 1
+
 print(f'Initialization fidelity {init_fidelity :.6f} +/- {init_fidelity_error: .6f}% ')
 print(f'Alpha confidence fidelity {alpha_confidence_fidelity :.6f} +/- {alpha_confidence_fidelity_error: .6f}% ')
+print(f'Number of iterations {number_of_iterations :.4f}')
+
 fig, ax = plt.subplots(4, 1, sharex=True)
 
 

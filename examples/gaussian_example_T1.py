@@ -8,17 +8,17 @@ from errorcausation import GaussianModel
 np.random.seed(42)
 
 model = GaussianModel(n_components=2, covariance_type="spherical")
-model.startprob_ = np.array([0.9, 0.1])
+model.startprob_ = np.array([0.5, 0.5])
 
 model.transmat_ = np.array([[1., 0.],
                             [0.1, 0.9]])
 
 model.means_ = np.array([[0.0, 0.0], [1., 0.]])
-model.covars_ = np.array([0.2, 0.2]) ** 2
+model.covars_ = np.array([0.5, 0.5]) ** 2
 
 t0 = time()
 N = 10
-X, Z = model.simulate_data(N, repeats = 100)
+X, Z = model.simulate_data(N, repeats = 10000)
 t1 = time()
 print(f"Time to simulate data: {t1 - t0:.3f}s")
 
@@ -26,7 +26,7 @@ f_options = {
     'mean': lambda x: np.mean(x, axis=1),
     'flatten': lambda x: x.flatten(),
 }
-f = f_options['flatten']
+f = f_options['mean']
 
 I = f(X[..., 0])
 Q = f(X[..., 1])
@@ -62,4 +62,5 @@ ax[0].set_ylabel('Q')
 ax[0].set_xlim(I_bins[0], I_bins[-1])
 ax[0].set_ylim(Q_bins[0], Q_bins[-1])
 
-ax[1].hist(I, bins=40, density=True, alpha=0.5, label='I')
+ax[1].qm_hist(I, bins=40, density=True, alpha=0.5, label='I')
+plt.show()

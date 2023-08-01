@@ -10,7 +10,7 @@ from errorcausation.opx.catagorical_hmm_algorithms_opx import create_forward_pro
 from errorcausation.opx.categorical_hmm_algorithms_raw_python import forward
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 from time import perf_counter_ns
-# creating the model to simulate the data
+# creating the qm_model to simulate the data
 model = CategoricalModel()
 model.set_start_prob(0.5)
 model.set_transition_prob(0.02, 0.02)

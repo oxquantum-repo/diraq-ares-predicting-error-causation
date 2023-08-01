@@ -91,8 +91,6 @@ ax[1].plot(alpha_opx[:, 1], label ="p(excited) on OPX")
 ax[1].plot(Z[0, :], label = "true state")
 ax[1].legend()
 
-
-
 ax[2].plot(alpha[:, 1] - alpha_opx[:, 1], label = "difference")
 fig.tight_layout()
 

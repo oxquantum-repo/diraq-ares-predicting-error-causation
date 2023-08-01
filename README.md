@@ -51,21 +51,21 @@ file = Path('data/even_init.mat')
 data = loadmat(file.resolve())
 measured_states = 1 - data['measured_states'].squeeze()
 
-# initialising a model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
+# initialising a qm_model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
 # to optimise
 model_to_fit = CategoricalModel()
 model_to_fit.set_start_prob(0.95)
 model_to_fit.set_transition_prob(0.05, 0.05)
 model_to_fit.set_emission_prob(0.95, 0.95)
 
-# fitting the model to the data, using the Baum-Welch algorithm. The uncertainty in the parameters is also computed
+# fitting the qm_model to the data, using the Baum-Welch algorithm. The uncertainty in the parameters is also computed
 # using the Cramer-Rao lower bound.
 model_to_fit.fit(measured_states, compute_uncertainty=True)
 
-# printing the fitted model, which should be close to the model used to simulate the data
+# printing the fitted qm_model, which should be close to the qm_model used to simulate the data
 print(model_to_fit)
 
-# using the fitted model to predict the true qubit state from the measured state and plotting the results
+# using the fitted qm_model to predict the true qubit state from the measured state and plotting the results
 predicted_states = model_to_fit.predict(measured_states, plot=True)
 
 ```
@@ -156,7 +156,7 @@ P_spin_flip_even_to_odd = 0.02  # the probability of back-action flipping the st
 P_spin_flip_odd_to_even = 0.25  # the probability of back-action flipping the state from odd to even
 P_readout = 0.999  # the probability of correctly reading out the state
 
-gen_model = hmm.CategoricalHMM(n_components=2)  # a hidden markov model (hmm) with 2 components
+gen_model = hmm.CategoricalHMM(n_components=2)  # a hidden markov qm_model (hmm) with 2 components
 
 # the probability of initialising in the two states [even, odd]
 gen_model.startprob_ = np.array([P_init_even, 1 - P_init_even])
@@ -175,7 +175,7 @@ gen_model.emissionprob_ = np.array([
     [1 - P_readout, P_readout]
 ])
 
-# %%  using the generative model to create some data
+# %%  using the generative qm_model to create some data
 measured_states = []  # array to hold the measured states (even or odd), this data is available
 true_states = []  # array to hold the true states (even or odd), this data is hidden
 
@@ -276,11 +276,11 @@ full_shapes = np.full(shape=repeats, fill_value=measurements)
 
 models = []
 for _ in tqdm(range(number_of_models_to_fit)):
-	# creating the hidden markov model
+	# creating the hidden markov qm_model
 	model = hmm.CategoricalHMM(n_components=2, init_params='')
 	model.n_features = 2
 	
-	# setting the initial parameters of our hmm model somewhat randomly according to our priors on the parameters
+	# setting the initial parameters of our hmm qm_model somewhat randomly according to our priors on the parameters
 	model.startprob_ = np.random.dirichlet([P_init_even_prior, 1 - P_init_even_prior])
 	model.transmat_ = np.array([np.random.dirichlet([1 - P_spin_flip_even_to_odd_prior, P_spin_flip_even_to_odd_prior]),
 								np.random.dirichlet(
@@ -293,10 +293,10 @@ for _ in tqdm(range(number_of_models_to_fit)):
 	random_subset_indices = np.random.choice(repeats, sequences_in_subset)
 	random_subset = measured_states[random_subset_indices, ...].reshape(-1, 1)
 	
-	# fitting the model to the subset of the data
+	# fitting the qm_model to the subset of the data
 	model.fit(random_subset, subset_shapes)
 	
-	# storing the score of the fitted model, evaluated over the whole dataset
+	# storing the score of the fitted qm_model, evaluated over the whole dataset
 	model.score = model.score(measured_states.reshape(-1, 1), full_shapes)
 	models.append(model)
 ```
@@ -311,9 +311,9 @@ transmat = np.array([model.transmat_ for model in models])
 emisprob = np.array([model.emissionprob_ for model in models])
 scores = np.array([model.score for model in models])
 
-# finding the model which fits the data best
+# finding the qm_model which fits the data best
 best_model = models[np.argmax(scores)]
-# fitting the model to the complete dataset just incase it changes the minimum slightly
+# fitting the qm_model to the complete dataset just incase it changes the minimum slightly
 best_model.fit(measured_states.reshape(-1, 1), full_shapes)
 
 # taking the parameters out of matrix form
