@@ -227,6 +227,10 @@ def forward_hhm(model: QubitInit, N):
 
 	# calculating alpha[0, :]
 	alpha[0, :] = model.start_prob() * emmisonprob[:, classifications[0]]
+
+	start_prob = model.start_prob()
+	for m in range(2):
+		alpha[0, m] = np.sum(start_prob * transmat[actions[0], :, m]) * emmisonprob[m, classifications[0]]
 	alpha[0, :] /= np.sum(alpha[0, :])
 
 	for i in range(1, N):
@@ -275,7 +279,9 @@ def forward_hhm_gaussian(model: QubitInit, N):
 	classifications[0] = observations[0] > model.threshold
 
 	# calculating alpha[0, :]
-	alpha[0, :] = model.start_prob() * gaussian(observations[0], np.array([0, 1]), std)
+	start_prob = model.start_prob()
+	for m in range(2):
+		alpha[0, m] = np.sum(start_prob * transmat[actions[0], :, m]) * gaussian(observations[0], m, std)
 	alpha[0, :] /= np.sum(alpha[0, :])
 
 	for i in range(1, N):
