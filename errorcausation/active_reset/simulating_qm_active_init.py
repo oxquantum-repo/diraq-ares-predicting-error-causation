@@ -37,12 +37,13 @@ class QubitInit:
 	std: float
 
 	def __post_init__(self):
+
 		self.steady_state = self.steady_state()
 		self.f_ground = self.ground_readout_fidelity()
 		self.f_excited = self.excited_readout_fidelity()
 		self.p_less_than_threshold = self.p_less_than_threshold()
 		self.emissonprob = self.emissonprob()
-
+		self.termination_threshold = 1 - self.p_0_to_1
 
 	def start_prob(self):
 		return np.array([self.p_init_0, 1 - self.p_init_0])
@@ -234,7 +235,7 @@ def forward_hhm(model: QubitInit, N):
 	alpha[0, :] /= np.sum(alpha[0, :])
 
 	for i in range(1, N):
-		if alpha[i - 1, 0] >1 - model.p_0_to_1:
+		if alpha[i - 1, 0] > model.termination_threshold:
 			break
 
 		actions[i] = alpha[i - 1, 0] < 0.5
@@ -285,7 +286,7 @@ def forward_hhm_gaussian(model: QubitInit, N):
 	alpha[0, :] /= np.sum(alpha[0, :])
 
 	for i in range(1, N):
-		if alpha[i - 1, 0] > 1 - model.p_0_to_1:
+		if alpha[i - 1, 0] > model.termination_threshold:
 			break
 
 		actions[i] = alpha[i - 1, 0] < 0.5

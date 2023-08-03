@@ -22,7 +22,7 @@ for p_init, label in zip([1., 0., 0.5], ['"ground"', '"excited"', 'superposition
 			threshold=threshold,
 			std=0.17,
 
-			p_1_to_0=0.05,
+			p_1_to_0=0.07,
 			p_0_to_1=0.004,
 
 			x_gate_fidelity=0.99,
