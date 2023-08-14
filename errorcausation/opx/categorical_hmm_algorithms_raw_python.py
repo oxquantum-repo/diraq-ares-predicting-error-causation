@@ -22,8 +22,6 @@ def viterbi(O, S, Pi, Tm, Em):
         q[n] = P[n+1, q[n+1]]
     return q
 
-
-
 def forward(observations, startprob, transmat, emmisonprob):
     """Forward algorithm for HMMs.
         O: observation sequence
@@ -47,44 +45,57 @@ def forward(observations, startprob, transmat, emmisonprob):
         alpha[n, :] /= np.sum(alpha[n, :])
     return alpha
 
-def backward(O, S, Pi, Tm, Em):
-    """Backward algorithm for HMMs.
-        O: observation sequence
-        S: set of states
-        Pi: initial state probabilities
-        Tm: transition matrix
-        Em: emission matrix
-        """
-    N = len(O)
-    M = len(S)
-    B = np.zeros((N, M))
-    B[N-1] = 1
-    for n in range(N-2, -1, -1):
-        for m in range(M):
-            B[n, m] = np.sum(B[n+1] * Tm[m, :] * Em[:, O[n+1]])
-    return B
+def backward(observations, startprob, transmat, emmisonprob):
+    """
+    Backward algorithm for HMMs.
+    """
+    observations = observations.astype(int).squeeze()
+    startprob = startprob.squeeze()
+    transmat = transmat.squeeze()
+    emmisonprob = emmisonprob.squeeze()
 
-def baum_welch(O, S, Pi, Tm, Em, N=100):
-    """Baum-Welch algorithm for HMMs.
-        O: observation sequence
-        S: set of states
-        Pi: initial state probabilities
-        Tm: transition matrix
-        Em: emission matrix
-        N: number of iterations
-        """
-    M = len(S)
-    for n in range(N):
-        F = forward(O, S, Pi, Tm, Em)
-        B = backward(O, S, Pi, Tm, Em)
-        P = F * B
-        P = P / np.sum(P, axis=1)[:, np.newaxis]
-        Pi = P[0]
-        Tm = np.zeros((M, M), dtype=int)
-        for m in range(M):
-            Tm[m] = np.sum(P[:-1, m] * Tm[:, m] * Em[:, O[1:]], axis=0) / np.sum(P[:-1, m])
-        Em = np.zeros((M, M), dtype=int)
-        for m in range(M):
-            Em[m] = np.sum(P[:, m] * O) / np.sum(P[:, m])
-    return Pi, Tm, Em
+    N, M = len(observations), 2
+    beta = np.zeros((N, M))
+    beta[N-1, :] = 1
+    for n in range(N-2, -1, -1):
+        beta[n, :] = np.sum(beta[n+1, :] * transmat * emmisonprob[:, observations[n+1]], axis=1)
+        beta[n, :] /= np.sum(beta[n, :])
+    return beta
+
+
+
+def baum_welch(observations, startprob, transmat, emmisonprob, n_iter=10):
+    """
+    Baum-Welch algorithm for HMMs.
+    """
+
+    observations = observations.astype(int).squeeze()
+    startprob = startprob.squeeze()
+    transmat = transmat.squeeze()
+    emmisonprob = emmisonprob.squeeze()
+
+    N, M = len(observations), 2
+
+    for _ in range(n_iter):
+
+        alpha = forward(observations, startprob, transmat, emmisonprob)
+        beta = backward(observations, startprob, transmat, emmisonprob)
+        gamma = alpha * beta
+        gamma /= np.sum(gamma, axis=1, keepdims=True)
+        xi = np.zeros((N-1, M, M))
+        for n in range(N-1):
+            for i in range(M):
+                for j in range(M):
+                    xi[n, i, j] = alpha[n, i] * transmat[i, j] * emmisonprob[j, observations[n+1]] * beta[n+1, j]
+        xi /= np.sum(xi, axis=(1, 2))[:, np.newaxis, np.newaxis]
+        startprob[...] = gamma[0]
+        transmat[...] = np.sum(xi, axis=0) / np.sum(gamma[:-1], axis=0)[:, np.newaxis]
+        for k in range(M):
+            for l in range(M):
+                transmat[k, l] /= np.sum(transmat[k, :])
+        for k in range(M):
+            for l in range(M):
+                emmisonprob[k, l] = np.sum(gamma[:, k] * (observations == l)) / np.sum(gamma[:, k])
+
+    return startprob, transmat, emmisonprob
 

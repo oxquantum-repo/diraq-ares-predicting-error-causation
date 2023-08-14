@@ -70,7 +70,7 @@ predicted_states = model_to_fit.predict(measured_states, plot=True)
 
 ```
 
-This was taken from [catagorical_example_experimental.py](examples/catagorical_example_experimental.py). More examples can be found in the [examples folder](examples/).
+This was taken from [catagorical_example_experimental.py](examples/diraq/catagorical_example_experimental.py). More examples can be found in the [examples folder](examples/).
 
 ## Mission Statement
 

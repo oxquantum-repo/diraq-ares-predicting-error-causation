@@ -17,7 +17,7 @@ model.means_ = np.array([[0.0, 0.0], [1., 0.]])
 model.covars_ = np.array([0.5, 0.5]) ** 2
 
 t0 = time()
-N = 10
+N = 5
 X, Z = model.simulate_data(N, repeats = 10000)
 t1 = time()
 print(f"Time to simulate data: {t1 - t0:.3f}s")
@@ -62,5 +62,5 @@ ax[0].set_ylabel('Q')
 ax[0].set_xlim(I_bins[0], I_bins[-1])
 ax[0].set_ylim(Q_bins[0], Q_bins[-1])
 
-ax[1].qm_hist(I, bins=40, density=True, alpha=0.5, label='I')
+ax[1].hist(I, bins=40, density=True, alpha=0.5, label='I')
 plt.show()

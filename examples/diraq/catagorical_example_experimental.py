@@ -5,9 +5,16 @@ from scipy.io import loadmat
 
 # np.random.seed(0)
 
-file = Path('./data/superposition_init.mat')
+files = {
+    'superposition_init': Path('./data/superposition_init.mat'),
+    'even_init': Path('./data/even_init.mat'),
+    'odd_init': Path('./data/odd_init.mat'),
+}
+
+file = files.get('even_init')
+print(file.resolve())
 data = loadmat(file.resolve())
-measured_states = 1 - data['measured_states'].squeeze()
+measured_states = data['measured_states'].squeeze()[0:200, :]
 
 
 # initialising a qm_model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm

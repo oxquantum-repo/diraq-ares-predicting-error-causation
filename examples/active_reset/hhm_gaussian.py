@@ -80,7 +80,7 @@ ax[0, 0].errorbar(100 * ground_state_readout_fidelity, y_categorical_hhm_fidelit
                   label='HHM', fmt='.', linestyle='-')
 ax[0, 0].errorbar(100 * ground_state_readout_fidelity, y_gaussian_hhm_fidelity, yerr=y_gaussian_hhm_error,
                   label='HHM Gaussian', fmt='.', linestyle='-')
-ax[0, 0].set_ylabel('Initialisation Fidelity (%)')
+ax[0, 0].set_ylabel('Initialisation fidelity (%)')
 
 ax[1, 0].errorbar(100 * ground_state_readout_fidelity, qm_number_of_iterations, yerr=qm_number_of_iterations_error,
                   label='QM iterations', fmt='.', linestyle='-')
@@ -179,6 +179,9 @@ ax[1, 1].set_xscale('log')
 tick = ax[0, 1].get_xticks()[::-1]
 ax[0, 1].set_xticklabels([f"{100 - tick:.2f}" for tick in tick])
 ax[1, 1].set_xticklabels([f"{100 - tick:.2f}" for tick in tick])
+
+for a,label in zip(ax.flatten(), 'abcdefghijklmnop'):
+    a.text(-0.15, 1.1, f'({label})', transform=a.transAxes, fontweight='bold', va='top', ha='right')
 
 fig.tight_layout()
 plt.savefig(f'../figures/hhm_gaussian_{datetime.now()}.pdf', bbox_inches='tight')
