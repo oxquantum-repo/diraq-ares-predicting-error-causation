@@ -7,7 +7,8 @@ import scienceplots
 
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
-plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+# plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+plt.style.use(["no-latex", "grid", "std-colors"])
 plt.rcParams.update({"font.size": 10})
 np.random.seed(0)
 
@@ -22,7 +23,7 @@ fit_models = []
 for _ in tqdm(range(100)):
     # using the qm_model to simulate data and plotting it.
     # the number of measurements is the number of measurements to perform before the qubit is reset
-    measured_states, true_states = model.simulate_data(measurements=20, repeats=1000)
+    measured_states, true_states = model.simulate_data(measurements=20, repeats=100)
 
     # initialising a qm_model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
     # to optimise
@@ -54,7 +55,14 @@ def height(std):
 density = True
 N_bin = 40
 
-ax[0].hist(f_init, bins=N_bin, density=density, label ="$P_{init, even}$", alpha = 0.5, color="blue")
+ax[0].hist(
+    f_init,
+    bins=N_bin,
+    density=density,
+    label="$P_{\mathrm{init, even}}$",
+    alpha=1,
+    color="#444444",
+)
 error = model.get_start_error()
 ax[0].errorbar(
     model.get_start_prob(), height(error), xerr=error, color="black", capsize=3
@@ -65,8 +73,22 @@ ax[0].set_ylabel("Probability density")
 ax[0].set_xlabel("Probability")
 
 trans_bins = np.linspace(f_transition.min(), f_transition.max(), N_bin)
-ax[1].hist(f_transition[:, 0], bins=trans_bins, density=density, alpha = 0.5, label ="$P_{even \\rightarrow odd}$", color="red")
-ax[1].hist(f_transition[:, 1], bins=trans_bins, density=density, alpha = 0.5, label ="$P_{odd \\rightarrow even}$", color="green")
+ax[1].hist(
+    f_transition[:, 0],
+    bins=trans_bins,
+    density=density,
+    alpha=1,
+    label="$P_{\mathrm{even \\rightarrow odd}}$",
+    color="#444444",
+)
+ax[1].hist(
+    f_transition[:, 1],
+    bins=trans_bins,
+    density=density,
+    alpha=1,
+    label="$P_{\mathrm{odd \\rightarrow even}}$",
+    color="#b1b1b1",
+)
 for i in range(2):
     error = model.get_transition_error()[i]
     ax[1].axvline(model.get_transition_prob()[i], color="black", linestyle="--")
@@ -81,8 +103,22 @@ ax[1].legend()
 ax[1].set_xlabel("Probability")
 
 emission_bins = np.linspace(f_emission.min(), f_emission.max(), N_bin)
-ax[2].hist(f_emission[:, 0], bins=emission_bins, density=density, alpha = 0.5, label ="$P_{read, even}$", color ='purple')
-ax[2].hist(f_emission[:, 1], bins=emission_bins, density=density, alpha = 0.5, label ="$P_{read, odd}$", color ='orange')
+ax[2].hist(
+    f_emission[:, 0],
+    bins=emission_bins,
+    density=density,
+    alpha=1,
+    label="$P_{\mathrm{read, even}}$",
+    color="#444444",
+)
+ax[2].hist(
+    f_emission[:, 1],
+    bins=emission_bins,
+    density=density,
+    alpha=1,
+    label="$P_{\mathrm{read, odd}}$",
+    color="#b1b1b1",
+)
 ax[2].axvline(model.get_emission_prob()[0], color="black", linestyle="--")
 ax[2].axvline(model.get_emission_prob()[1], color="black", linestyle="--")
 ax[2].set_xlabel("Probability")
@@ -107,8 +143,8 @@ for i in range(3):
 for a, label in zip(ax, "abcdefghijklmnop"):
     a.text(
         -0.1,
-        1.1,
-        f"({label})",
+        1.2,
+        f"{label}",
         transform=a.transAxes,
         fontweight="bold",
         va="top",
