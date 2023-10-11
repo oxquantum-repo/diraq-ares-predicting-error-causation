@@ -6,12 +6,14 @@ np.random.seed(0)
 # initialising a qm_model to simulate data which we will fit another
 model = CategoricalModel()
 model.set_start_prob(0.99)
-model.set_transition_prob(0.1, 0.02)
+model.set_transition_prob(0.01, 0.02)
 model.set_emission_prob(0.995, 0.99)
 
 # using the qm_model to simulate data and plotting it.
 # the number of measurements is the number of measurements to perform before the qubit is reset
-measured_states, true_states = model.simulate_data(measurements=20, repeats=1000, plot=False)
+measured_states, true_states = model.simulate_data(
+    measurements=20, repeats=200, plot=False
+)
 
 # initialising a qm_model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
 # to optimise
