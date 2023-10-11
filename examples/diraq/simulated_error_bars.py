@@ -92,4 +92,5 @@ fig.tight_layout()
 file_path = '/Users/barnaby/Documents/thesis/thesis/chapter9/figures'
 plt.savefig(f"{file_path}/log_likelihood_error_bars.pdf", bbox_inches='tight')
 
+l
 plt.show()
