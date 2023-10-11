@@ -52,7 +52,7 @@ def height(std):
 density = True
 N_bin = 40
 
-ax[0].qm_hist(f_init, bins=N_bin, density=density, label ="$p_{init}$", alpha = 0.5, color="blue")
+ax[0].hist(f_init, bins=N_bin, density=density, label ="$p_{init}$", alpha = 0.5, color="blue")
 error = model.get_start_error()
 ax[0].errorbar(model.get_start_prob(), height(error), xerr=error, color="black", capsize=3)
 ax[0].axvline(model.get_start_prob(), color="black", linestyle="--")
@@ -61,8 +61,8 @@ ax[0].set_ylabel("Probability density")
 ax[0].set_xlabel("Probability")
 
 trans_bins = np.linspace(f_transition.min(), f_transition.max(), N_bin)
-ax[1].qm_hist(f_transition[:, 0], bins=trans_bins, density=density, alpha = 0.5, label ="$p_{even \\rightarrow odd}$", color="red")
-ax[1].qm_hist(f_transition[:, 1], bins=trans_bins, density=density, alpha = 0.5, label ="$p_{odd \\rightarrow even}$", color="green")
+ax[1].hist(f_transition[:, 0], bins=trans_bins, density=density, alpha = 0.5, label ="$p_{even \\rightarrow odd}$", color="red")
+ax[1].hist(f_transition[:, 1], bins=trans_bins, density=density, alpha = 0.5, label ="$p_{odd \\rightarrow even}$", color="green")
 for i in range(2):
     error = model.get_transition_error()[i]
     ax[1].axvline(model.get_transition_prob()[i], color="black", linestyle="--")
@@ -71,8 +71,8 @@ ax[1].legend()
 ax[1].set_xlabel("Probability")
 
 emission_bins = np.linspace(f_emission.min(), f_emission.max(), N_bin)
-ax[2].qm_hist(f_emission[:, 0], bins=emission_bins, density=density, alpha = 0.5, label ="$f_{even}$", color ='purple')
-ax[2].qm_hist(f_emission[:, 1], bins=emission_bins, density=density, alpha = 0.5, label ="$f_{odd}$", color ='orange')
+ax[2].hist(f_emission[:, 0], bins=emission_bins, density=density, alpha = 0.5, label ="$f_{even}$", color ='purple')
+ax[2].hist(f_emission[:, 1], bins=emission_bins, density=density, alpha = 0.5, label ="$f_{odd}$", color ='orange')
 ax[2].axvline(model.get_emission_prob()[0], color="black", linestyle="--")
 ax[2].axvline(model.get_emission_prob()[1], color="black", linestyle="--")
 ax[2].set_xlabel("Probability")
@@ -95,5 +95,5 @@ fig.tight_layout()
 
 file_path = '/Users/barnaby/Documents/thesis/thesis/chapter9/figures'
 
-plt.savefig(f"{file_path}/catagorical_histogram.pdf", bbox_inches='tight')
+# plt.savefig(f"{file_path}/catagorical_histogram.pdf", bbox_inches='tight')
 plt.show()
