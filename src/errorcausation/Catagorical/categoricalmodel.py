@@ -182,7 +182,7 @@ class CategoricalModel(hmm.CategoricalHMM):
         if plot:
             shape = np.array(measured_states.shape) + 1
             fig, ax = plt.subplots(nrows=1, ncols=3, sharey=True)
-            fig.set_size_inches(5.7, 2.02)
+            fig.set_size_inches(5, 2.5)
 
             kwargs = {
                 "aspect": "auto",
@@ -193,10 +193,10 @@ class CategoricalModel(hmm.CategoricalHMM):
 
             diff = measured_states - predicted_states
             ax[0].imshow(
-                measured_states, cmap=ListedColormap(["white", "black"]), **kwargs
+                measured_states, cmap=ListedColormap(["black", "white"]), **kwargs
             )
             ax[1].imshow(
-                predicted_states, cmap=ListedColormap(["white", "black"]), **kwargs
+                predicted_states, cmap=ListedColormap(["black", "white"]), **kwargs
             )
             ax[2].imshow(diff, cmap=ListedColormap(["red", "white", "green"]), **kwargs)
             ax[0].set_ylabel("Repeat")
@@ -216,7 +216,7 @@ class CategoricalModel(hmm.CategoricalHMM):
             ),
 
             print("here")
-            plt.tight_layout()
+            # plt.tight_layout()
             plt.savefig(f"./simulated.pdf")
 
             if "save_fig" in kwargs:
