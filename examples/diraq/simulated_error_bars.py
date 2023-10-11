@@ -9,7 +9,8 @@ import numpy as np
 
 np.random.seed(0)
 
-plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+# plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+plt.style.use(["no-latex", "grid", "std-colors"])
 plt.rcParams.update({"font.size": 10})
 
 probs = {
