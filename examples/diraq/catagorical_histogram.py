@@ -7,8 +7,8 @@ import scienceplots
 
 from errorcausation.Catagorical.categoricalmodel import CategoricalModel
 
-# plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
-plt.style.use(["no-latex", "grid", "std-colors"])
+plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+# plt.style.use(["no-latex", "grid", "std-colors"])
 plt.rcParams.update({"font.size": 10})
 np.random.seed(0)
 
@@ -20,10 +20,10 @@ model.set_emission_prob(0.995, 0.99)
 
 fit_models = []
 
-for _ in tqdm(range(100)):
+for _ in tqdm(range(1000)):
     # using the qm_model to simulate data and plotting it.
     # the number of measurements is the number of measurements to perform before the qubit is reset
-    measured_states, true_states = model.simulate_data(measurements=20, repeats=100)
+    measured_states, true_states = model.simulate_data(measurements=20, repeats=1000)
 
     # initialising a qm_model to fit to the data and setting the starting guess of parameters for the Baum-Welch algorithm
     # to optimise

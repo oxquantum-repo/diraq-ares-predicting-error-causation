@@ -9,8 +9,15 @@ import numpy as np
 
 np.random.seed(0)
 
-# plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
-plt.style.use(["no-latex", "grid", "std-colors"])
+plt.style.use(["science", "no-latex", "grid", "ieee", "std-colors"])
+# plt.style.use(["no-latex", "grid", "std-colors"])
+# Override the font settings for text elements
+# plt.rcParams.update(
+#     {
+#         "font.family": "sans-serif",  # Use a sans-serif font
+#         "font.sans-serif": "Liberation Sans",  # Specify the sans-serif font you want (e.g., Arial)
+#     }
+# )
 plt.rcParams.update({"font.size": 10})
 
 probs = {
@@ -91,7 +98,7 @@ for a, name, label in zip(
     setter_function, getter_function = functions[name]
 
     # Create a list of grayscale colors
-    _colors = [str(i / 12) for i in range(1, 11)]
+    _colors = [str(i / 12) for i in np.linspace(2, 11, 10)]
 
     for _i, n in enumerate(tqdm(Ns)):
         X = np.linspace(*ranges[name], 100)
@@ -106,7 +113,7 @@ for a, name, label in zip(
         model_to_fit.compute_uncertainty(measured_states[:n])
 
         value, error = getter_function()
-        a.plot(X, Y, color=_colors[_i], label=f"{n} repeats")
+        a.plot(X, Y, alpha=0.5, label=f"{n} repeats")
         a.axvline(probs[name], color="k", linestyle="--")
         a.set_xlim(probs[name] - 0.01, probs[name] + 0.01)
 
@@ -116,6 +123,8 @@ for a, name, label in zip(
         )
 
     a.set_xlabel(label)
+    # _x_label = a.xaxis.get_label()
+    # _x_label.set_fontname("Liberation Sans")
     a.set_ylim(-2000, 0)
 
 ax[0].set_ylabel("Log-likelihood")
@@ -124,7 +133,7 @@ for a, label in zip(ax, "abcdefghijklmnop"):
     a.text(
         0.05,
         1.1,
-        f"({label})",
+        f"{label}",
         transform=a.transAxes,
         fontweight="bold",
         va="top",
@@ -133,6 +142,6 @@ for a, label in zip(ax, "abcdefghijklmnop"):
 
 fig.tight_layout()
 file_path = "."
-plt.savefig(f"{file_path}/log_likelihood_error_bars.pdf", bbox_inches="tight")
+plt.savefig(f"{file_path}/color_log_likelihood_error_bars.pdf", bbox_inches="tight")
 
 plt.show()
