@@ -80,16 +80,19 @@ for a, name, label in zip(
     ax,
     ["start_prob", "p_even_odd", "p_odd_even", "f_even", "f_odd"],
     [
-        "$P_{init, even}$",
-        "$P_{even \\rightarrow odd}$",
-        "$P_{odd \\rightarrow even}$",
-        "$P_{read, even}$",
-        "$P_{read, odd}$",
+        "$P_{\mathrm{init, even}}$",
+        "$P_{\mathrm{even \\rightarrow odd}}$",
+        "$P_{\mathrm{odd \\rightarrow even}}$",
+        "$P_{\mathrm{read, even}}$",
+        "$P_{\mathrm{read, odd}}$",
     ],
 ):
     setter_function, getter_function = functions[name]
 
-    for n in tqdm(Ns):
+    # Create a list of grayscale colors
+    _colors = [str(i / 12) for i in range(1, 11)]
+
+    for _i, n in enumerate(tqdm(Ns)):
         X = np.linspace(*ranges[name], 100)
         Y = np.zeros_like(X)
         for i, x in enumerate(X):
@@ -102,7 +105,7 @@ for a, name, label in zip(
         model_to_fit.compute_uncertainty(measured_states[:n])
 
         value, error = getter_function()
-        a.plot(X, Y, alpha=0.5, label=f"{n} repeats")
+        a.plot(X, Y, color=_colors[_i], label=f"{n} repeats")
         a.axvline(probs[name], color="k", linestyle="--")
         a.set_xlim(probs[name] - 0.01, probs[name] + 0.01)
 
