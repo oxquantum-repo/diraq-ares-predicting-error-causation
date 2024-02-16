@@ -1,0 +1,1 @@
+from .categoricalmodel import CategoricalModel
