@@ -43,7 +43,7 @@ Below is an example of how one would run the `errorcausation` package:
 import numpy as np
 from pathlib import Path
 from scipy.io import loadmat
-from errorcausation.Catagorical.categoricalmodel import CategoricalModel
+from errorcausation.Categorical.categoricalmodel import CategoricalModel
 
 np.random.seed(0)
 
@@ -70,7 +70,7 @@ predicted_states = model_to_fit.predict(measured_states, plot=True)
 
 ```
 
-This was taken from [catagorical_example_experimental.py](examples/diraq/catagorical_example_experimental.py). More examples can be found in the [examples folder](examples/).
+This was taken from [categorical_example_experimental.py](examples/diraq/categorical_example_experimental.py). More examples can be found in the [examples folder](examples/).
 
 ## Mission Statement
 

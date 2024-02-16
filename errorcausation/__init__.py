@@ -1,1 +1,1 @@
-from .Catagorical import *
+from .Categorical import *
