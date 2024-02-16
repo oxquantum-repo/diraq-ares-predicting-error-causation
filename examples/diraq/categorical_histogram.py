@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import scienceplots
 
-from errorcausation.Catagorical.categoricalmodel import CategoricalModel
+from errorcausation.Categorical.categoricalmodel import CategoricalModel
 
 plt.style.use(['science', 'no-latex', 'grid', 'ieee', 'std-colors'])
 plt.rcParams.update({'font.size': 10})
@@ -95,5 +95,5 @@ fig.tight_layout()
 
 file_path = '/Users/barnaby/Documents/thesis/thesis/chapter9/figures'
 
-# plt.savefig(f"{file_path}/catagorical_histogram.pdf", bbox_inches='tight')
+# plt.savefig(f"{file_path}/categorical_histogram.pdf", bbox_inches='tight')
 plt.show()
