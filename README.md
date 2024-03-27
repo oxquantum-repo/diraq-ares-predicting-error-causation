@@ -28,6 +28,12 @@ poetry env use 3.12
 poetry install
 ```
 
+5. You can run the example scripts locally, for example,
+
+```bash
+poetry run python examples/diraq/categorical_example_simulated.py
+```
+
 #### With `pip`
 
 1. Clone the repo
