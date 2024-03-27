@@ -2,11 +2,33 @@
 
 A package for analysing and quantifying the SPAM + state flip errors in a quantum computer
 
-## Summary
-
 ## Quick start
 
 ### Installation
+
+#### With `poetry`
+
+1. Clone the repo
+
+```bash
+git clone  https://github.com/oxquantum-repo/diraq-ares-predicting-error-causation/
+```
+
+2. Set up your local python version with poetry
+
+```bash
+poetry env use 3.12
+```
+
+3. `cd` into the cloned repo directory `diraq-ares-predicting-error-causation/`
+
+4. Install locally with poetry
+
+```bash
+poetry install
+```
+
+#### With `pip`
 
 1. Clone the repo
 
@@ -80,7 +102,7 @@ This was taken from [categorical_example_experimental.py](examples/diraq/categor
 
 - Repeated PSB non-demolition readout (Two states: Even/Odd == (up, up; down, down)/(up, down; down, up)
 - We try to initialise into the even state
-- In Experiment Number 1  we measured: even, even, even, odd, odd
+- In Experiment Number 1 we measured: even, even, even, odd, odd
 
 #### Questions to answer:
 
@@ -92,9 +114,9 @@ This was taken from [categorical_example_experimental.py](examples/diraq/categor
 ### Objectives
 
 - Given a sequence of readout data, predict the probability (with uncertainty) of:
-    - A readout error
-    - Spin flip
-    - Initialisation error
+  - A readout error
+  - Spin flip
+  - Initialisation error
 - Therefore tell me what happened in this measurement based on these probabilities
 - Infer the initialisation state (with uncertainty) based on readout data
 - Predict the next state to be read out (with uncertainty) based on previous states
@@ -103,7 +125,7 @@ This was taken from [categorical_example_experimental.py](examples/diraq/categor
 
 - Treat the readout sequences as Markovian
 - Use a Hidden Markov Model to extract the system probabilities
-- Demonstrate success of Hidden Markov Model on simulated data 
+- Demonstrate success of Hidden Markov Model on simulated data
 
 ## Example results
 
