@@ -1,6 +1,21 @@
+[tool.poetry]
+name = "diraq-ares-predicting-error-causation"
+version = "0.1.0"
+description = "Analyse and quantify the SPAM + state flip errors in a quantum computer."
+authors = ["Barnaby van Straaten <barnaby.vanstraaten@kellogg.ox.ac.uk>", "Brandon Severin"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "errorcausation"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+hmmlearn = "^0.3.2"
+matplotlib = "^3.8.3"
+numpy = "^1.26.4"
+tqdm = "^4.66.2"
+numdifftools = "^0.9.41"
+
+
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
